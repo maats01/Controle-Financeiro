@@ -11,4 +11,19 @@ class UsersController extends BaseController
     {
         // TODO
     }
+
+    public function create()
+    {
+        // TODO
+    }
+
+    public function edit(int $id)
+    {
+        // TODO
+    }
+
+    public function delete()
+    {
+        // TODO
+    }
 }
