@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Entities\Category;
 
 class CategoriesModel extends Model
 {
@@ -14,6 +15,7 @@ class CategoriesModel extends Model
         'name',
     ];
 
+    protected $returnType = Category::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\Transaction;
 use CodeIgniter\Model;
 
 class TransactionsModel extends Model
@@ -20,6 +21,7 @@ class TransactionsModel extends Model
         'user_id',
     ];
 
+    protected $returnType = Transaction::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 }

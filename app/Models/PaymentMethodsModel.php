@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Entities\PaymentMethod;
 use CodeIgniter\Model;
 
 class PaymentMethodsModel extends Model
@@ -13,6 +14,7 @@ class PaymentMethodsModel extends Model
         'description',
     ];
 
+    protected $returnType = PaymentMethod::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 }
