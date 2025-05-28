@@ -1,7 +1,9 @@
 # Controle-Financeiro
 
 ## Requisitos
+- PHP 8.1 ou superior
 - Composer
+- Banco de dados relacional
 
 ## Instalação
 
@@ -12,7 +14,7 @@ git clone https://github.com/maats01/Controle-Financeiro.git
 
 ### 2. Instalar dependências
 ```bash
-composer update
+composer install
 ```
 
 ### 3. Executar migrations
