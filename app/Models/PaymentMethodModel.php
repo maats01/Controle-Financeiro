@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
+use App\Entities\PaymentMethod;
 use CodeIgniter\Model;
-use App\Entities\Category;
 
-class CategoriesModel extends Model
+class PaymentMethodModel extends Model
 {
-    protected $table = 'categories';
+    protected $table = 'payment_methods';
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'type',
-        'name',
+        'description',
     ];
 
-    protected $returnType = Category::class;
+    protected $returnType = PaymentMethod::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 }

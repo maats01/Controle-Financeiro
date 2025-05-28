@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Entities\Situation;
 use CodeIgniter\Model;
 
-class SituationsModel extends Model
+class SituationModel extends Model
 {
     protected $table = 'situations';
     protected $primaryKey = 'id';
