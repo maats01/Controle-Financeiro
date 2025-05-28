@@ -7,6 +7,7 @@ use App\Controllers;
  * @var RouteCollection $routes
  */
 
+service('auth')->routes($routes);
 // Transactions routes
 $routes->get('/', [TransactionsController::class, 'index']);
 $routes->get('transactions', [TransactionsController::class, 'index']);

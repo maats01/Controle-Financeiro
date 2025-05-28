@@ -34,6 +34,10 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'session'       => \CodeIgniter\Shield\Filters\SessionAuth::class,
+        'tokens'        => \CodeIgniter\Shield\Filters\TokenAuth::class,
+        'chain'         => \CodeIgniter\Shield\Filters\ChainAuth::class,
+        'auth-rates'    => \CodeIgniter\Shield\Filters\AuthRates::class,  
     ];
 
     /**
@@ -72,6 +76,8 @@ class Filters extends BaseFilters
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
+            'auth-rates',
+            'session' => ['except' => ['login', 'register', 'auth/a/', 'logout']],
         ],
         'after' => [
             // 'honeypot',
@@ -103,5 +109,11 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'auth-rates' => [
+            'before' => [
+                'login', 'register', 'auth/a/'
+            ]
+        ]
+    ];
 }
