@@ -17,9 +17,7 @@ composer update
 
 ### 3. Executar migrations
 ```bash
-php spark migrate -n 'CodeIgniter\Shield'
-php spark migrate -n 'CodeIgniter\Settings'
-php spark migrate
+php spark migrate --all
 ```
 Obs.: para as migrations funcionarem, é necessário ter um arquivo *.env* com as variáveis básicas para o framework se conectar com o banco de dados.  
 
