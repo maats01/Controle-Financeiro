@@ -10,6 +10,7 @@ class CreateSituations extends Migration
     {
         $this->forge->addField([
             'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
+            'type'        => ['type' => 'BOOLEAN'],
             'description' => ['type' => 'VARCHAR', 'constraint' => 255],
             'created_at'  => ['type' => 'DATETIME', 'null' => true],
             'updated_at'  => ['type' => 'DATETIME', 'null' => true],

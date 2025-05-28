@@ -10,6 +10,7 @@ class SituationsModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
+        'type',
         'description',
     ];
 
