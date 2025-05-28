@@ -11,9 +11,6 @@ class SituationsModel extends Model
 
     protected $allowedFields = [
         'description',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
     protected $useTimestamps = true;

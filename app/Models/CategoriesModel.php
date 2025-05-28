@@ -12,9 +12,6 @@ class CategoriesModel extends Model
     protected $allowedFields = [
         'type',
         'name',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
     protected $useTimestamps = true;

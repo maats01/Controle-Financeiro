@@ -18,9 +18,6 @@ class TransactionsModel extends Model
         'situation_id',
         'payment_method_id',
         'user_id',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
     protected $useTimestamps = true;
