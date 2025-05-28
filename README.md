@@ -21,7 +21,7 @@ php spark migrate -n 'CodeIgniter\Shield'
 php spark migrate -n 'CodeIgniter\Settings'
 php spark migrate
 ```
-Obs.: para as migrations funcionarem, é necessário ter um arquivo *.env* com os dados básicos para conexão com o banco de dados.  
+Obs.: para as migrations funcionarem, é necessário ter um arquivo *.env* com as variáveis básicas para o framework se conectar com o banco de dados.  
 
 ### 4. Executar os seeders
 ```bash
