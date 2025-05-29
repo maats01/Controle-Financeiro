@@ -25,7 +25,7 @@ class TransactionModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
-    public function getTransactionsWithDetails()
+    public function getTransactionsWithDetails($perPage = 10, $currentPage = 0)
     {
         $db = \Config\Database::connect();
         $builder = $db->table('transactions as t');
@@ -44,8 +44,16 @@ class TransactionModel extends Model
         $builder->join('situations', 't.situation_id = situations.id', 'left');
         $builder->join('payment_methods as pm', 't.payment_method_id = pm.id', 'left');
 
-        $query = $builder->get();
+        $offset = ($currentPage - 1) * $perPage;
+        $query = $builder->get($perPage, $offset);
 
         return $query->getResultArray();
+    }
+
+    public function getTotalRecords()
+    {
+        $db = \Config\Database::connect();
+        $builder = $db->table('transactions');
+        return $builder->countAll();
     }
 }

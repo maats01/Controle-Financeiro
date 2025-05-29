@@ -11,14 +11,19 @@ class CategoriesController extends BaseController
     public function index()
     {
         $model = model(CategoryModel::class);
+        $request = $this->request;
+        $perPage = (int) ($request->getGet('per_page') ?? 10);
 
         $data = [
-            'categories_list' => $model->findAll(),
+            'categories_list' => $model->paginate($perPage),
+            'per_page' => $perPage,
+            'pager' => $model->pager,
             'title' => 'Categorias' 
         ];
 
         return view('templates/header', $data)
-            . view('categories/index');
+            . view('categories/index')
+            . view('templates/footer');
     }
 
     public function create()
