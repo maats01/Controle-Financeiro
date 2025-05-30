@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\PaymentMethodModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class PaymentMethodsController extends BaseController
 {
@@ -13,16 +12,15 @@ class PaymentMethodsController extends BaseController
         $model = model(PaymentMethodModel::class);
         $request = $this->request;
         $perPage = (int) ($request->getGet('per_page') ?? 10);
+        $searchString = $request->getGet('desc') ?? '';
         
         $data = [
             'title' => 'Formas de Pagamento',
-            'payment_methods_list' => $model->paginate($perPage),
+            'payment_methods_list' => $model->getFilteredPaymentMethods($searchString)->paginate($perPage),
             'per_page' => $perPage,
             'pager' => $model->pager,
         ]; 
 
-        return view('templates/header', $data)
-            . view('payment_methods/index')
-            . view('templates/footer');
+        return view('payment_methods/index', $data);
     }
 }

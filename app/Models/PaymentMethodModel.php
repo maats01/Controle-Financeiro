@@ -17,4 +17,15 @@ class PaymentMethodModel extends Model
     protected $returnType = PaymentMethod::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
+
+    public function getFilteredPaymentMethods($searchString = '')
+    {
+        $builder = $this->builder();
+        if ($searchString != '')
+        {
+            $builder->like('description', $searchString, 'both');
+        }
+
+        return $this;
+    }
 }

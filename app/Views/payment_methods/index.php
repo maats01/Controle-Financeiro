@@ -1,6 +1,8 @@
+<?= $this->extend('Layouts/default') ?>
+<?= $this->section('content') ?>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Formas de Pagamento' ?></h1>
-    <a href="/formas-de-pagamento/create" class="btn btn-primary shadow-sm">
+    <a href="/admin/formas-de-pagamento/criar" class="btn btn-primary shadow-sm">
         <i class="fas fa-plus fa-sm text-white-50"></i> Adicionar Forma de Pagamento
     </a>
 </div>
@@ -11,14 +13,17 @@
     </a>
     <div class="collapse show" id="collapseCardFiltros">
         <div class="card-body">
-            <form action="/formas-de-pagamento" method="get">
+            <form action="/admin/formas-de-pagamento" method="get">
                 <div class="form-row">
                     <div class="form-group col-md-9">
                         <label for="descricao">Descrição da Forma de Pagamento</label>
-                        <input type="text" class="form-control form-control-sm" id="descricao" name="descricao" placeholder="Buscar por descrição..." value="<?= isset($_GET['descricao']) ? esc($_GET['descricao']) : '' ?>">
+                        <input type="text" class="form-control form-control-sm" id="descricao" name="desc" placeholder="Buscar por descrição..." value="<?= isset($_GET['desc']) ? esc($_GET['desc']) : '' ?>">
                     </div>
                     <div class="form-group col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-info btn-sm btn-block"><i class="fas fa-search"></i> Filtrar</button>
+                        <div class="btn-group btn-block" role="group" aria-label="Ações de Filtro">
+                            <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-search"></i> Filtrar</button>
+                            <a href="/admin/formas-de-pagamento" class="btn btn-secondary btn-sm"><i class="fas fa-eraser"></i> Limpar</a>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -74,10 +79,10 @@
                                 <td><?= esc($pm->id) ?></td>
                                 <td><?= esc($pm->description) ?></td>
                                 <td>
-                                    <a href="/formas-de-pagamento/edit/<?= esc($pm->id) ?>" class="btn btn-sm btn-info" title="Editar">
+                                    <a href="/admin/formas-de-pagamento/editar/<?= esc($pm->id) ?>" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/formas-de-pagamento/delete/<?= esc($pm->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta forma de pagamento? Atenção: Lançamentos associados podem ser afetados.');">
+                                    <a href="/admin/formas-de-pagamento/deletar/<?= esc($pm->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta forma de pagamento? Atenção: Lançamentos associados podem ser afetados.');">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -97,6 +102,9 @@
                 <?= $pager->links() ?>
             </div>
         <?php endif; ?>
-        <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
     </div>
 </div>
+<?= $this->endSection() ?>
+<?= $this->section('scripts') ?>
+<script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
+<?= $this->endSection() ?>

@@ -24,7 +24,7 @@
                 <div class="modal-body">Selecione "Sair" abaixo se você está pronto para encerrar sua sessão atual.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
-                    <?php $baseUrl = ''; // Ex: '/meuprojeto' ou deixe vazio se estiver na raiz ?>
+                    <?php $baseUrl = '';  ?>
                     <a class="btn btn-primary" href="<?= $baseUrl ?>/logout">Sair</a> </div>
             </div>
         </div>

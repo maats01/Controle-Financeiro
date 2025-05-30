@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\CategoryModel;
 
 class CategoriesController extends BaseController
@@ -13,17 +12,17 @@ class CategoriesController extends BaseController
         $model = model(CategoryModel::class);
         $request = $this->request;
         $perPage = (int) ($request->getGet('per_page') ?? 10);
+        $searchString = $request->getGet('desc') ?? '';
+        $type = is_numeric($request->getGet('type')) ? (int) $request->getGet('type') : null;
 
         $data = [
-            'categories_list' => $model->paginate($perPage),
+            'categories_list' => $model->getFilteredCategories($searchString, $type)->paginate($perPage),
             'per_page' => $perPage,
             'pager' => $model->pager,
             'title' => 'Categorias' 
         ];
 
-        return view('templates/header', $data)
-            . view('categories/index')
-            . view('templates/footer');
+        return view('categories/index', $data);
     }
 
     public function create()

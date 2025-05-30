@@ -25,35 +25,61 @@ class TransactionModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
-    public function getTransactionsWithDetails($perPage = 10, $currentPage = 0)
+    public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString)
     {
-        $db = \Config\Database::connect();
-        $builder = $db->table('transactions as t');
+        $builder = $this->builder();
         $builder->select('
-            t.id, 
-            t.type, 
-            t.date, 
+            transactions.id, 
+            transactions.type, 
+            transactions.date, 
             categories.name as category_name,
-            t.description,
-            t.amount,
+            transactions.description,
+            transactions.amount,
             situations.description as situation_desc,
             pm.description as pm_desc,
-            t.created_at
+            transactions.created_at
         ');
-        $builder->join('categories', 't.category_id = categories.id', 'left');
-        $builder->join('situations', 't.situation_id = situations.id', 'left');
-        $builder->join('payment_methods as pm', 't.payment_method_id = pm.id', 'left');
+        $builder->join('categories', 'transactions.category_id = categories.id', 'left');
+        $builder->join('situations', 'transactions.situation_id = situations.id', 'left');
+        $builder->join('payment_methods as pm', 'transactions.payment_method_id = pm.id', 'left');
 
-        $offset = ($currentPage - 1) * $perPage;
-        $query = $builder->get($perPage, $offset);
+        $validStartDate = isset($startDate) && $startDate != '';
+        $validEndDate = isset($endDate) && $endDate != '';
 
-        return $query->getResultArray();
-    }
+        if ($validStartDate && $validEndDate)
+        {
+            $builder->where('transactions.date >=', $startDate);
+            $builder->where('transactions.date <=', $endDate);
+        }
+        else if ($validStartDate)
+        {
+            $builder->where('transactions.date >=', $startDate);
+        }
+        else if ($validEndDate)
+        {
+            $builder->where('transactions.date <=', $endDate);
+        }
 
-    public function getTotalRecords()
-    {
-        $db = \Config\Database::connect();
-        $builder = $db->table('transactions');
-        return $builder->countAll();
+        if (isset($type) && $type != '')
+        {
+            $builder->where('transactions.type', $type);
+        }
+
+        if (isset($category_id) && is_numeric($category_id))
+        {
+            $builder->where('transactions.category_id', (int) $category_id);
+        }
+
+        if (isset($situation_id) && is_numeric($situation_id))
+        {
+            $builder->where('transactions.situation_id', (int) $situation_id);
+        }
+
+        if (isset($searchString) && $searchString != '')
+        {
+            $builder->like('transactions.description', $searchString, 'both');
+        }
+
+        return $this;
     }
 }

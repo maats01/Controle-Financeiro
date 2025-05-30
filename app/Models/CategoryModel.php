@@ -18,4 +18,19 @@ class CategoryModel extends Model
     protected $returnType = Category::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
+
+    public function getFilteredCategories($searchString = '', $type = null)
+    {
+        $builder = $this->builder();
+        if ($searchString != '')
+        {
+            $builder->like('name', $searchString, 'both');
+        }
+        if (is_integer($type))
+        {
+            $builder->where('type', $type);
+        }
+
+        return $this;
+    }
 }

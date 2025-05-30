@@ -1,6 +1,8 @@
+<?= $this->extend('Layouts/default') ?>
+<?= $this->section('content') ?>
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Situações' ?></h1>
-    <a href="/situacoes/create" class="btn btn-primary shadow-sm">
+    <a href="/admin/situacoes/criar" class="btn btn-primary shadow-sm">
         <i class="fas fa-plus fa-sm text-white-50"></i> Adicionar Situação
     </a>
 </div>
@@ -11,20 +13,23 @@
     </a>
     <div class="collapse show" id="collapseCardFiltros">
         <div class="card-body">
-            <form action="/situacoes" method="get">
+            <form action="/admin/situacoes" method="get">
                 <div class="form-row">
                     <div class="form-group col-md-6"> <label for="descricao">Descrição da Situação</label>
-                        <input type="text" class="form-control form-control-sm" id="descricao" name="descricao" placeholder="Buscar por descrição..." value="<?= isset($_GET['descricao']) ? esc($_GET['descricao']) : '' ?>">
+                        <input type="text" class="form-control form-control-sm" id="descricao" name="desc" placeholder="Buscar por descrição..." value="<?= isset($_GET['desc']) ? esc($_GET['desc']) : '' ?>">
                     </div>
                     <div class="form-group col-md-3"> <label for="tipo">Tipo</label>
-                        <select id="tipo" name="tipo" class="form-control form-control-sm">
+                        <select id="tipo" name="type" class="form-control form-control-sm">
                             <option value="">Todos</option>
-                            <option value="0" <?= (isset($_GET['tipo']) && $_GET['tipo'] === '0') ? 'selected' : '' ?>>Receita</option>
-                            <option value="1" <?= (isset($_GET['tipo']) && $_GET['tipo'] === '1') ? 'selected' : '' ?>>Despesa</option>
+                            <option value="0" <?= (isset($_GET['type']) && $_GET['type'] === '0') ? 'selected' : '' ?>>Despesa</option>
+                            <option value="1" <?= (isset($_GET['type']) && $_GET['type'] === '1') ? 'selected' : '' ?>>Receita</option>
                         </select>
                     </div>
                     <div class="form-group col-md-3 d-flex align-items-end">
-                        <button type="submit" class="btn btn-info btn-sm btn-block"><i class="fas fa-search"></i> Filtrar</button>
+                        <div class="btn-group btn-block" role="group" aria-label="Ações de Filtro">
+                            <button type="submit" class="btn btn-info btn-sm"><i class="fas fa-search"></i> Filtrar</button>
+                            <a href="/admin/situacoes" class="btn btn-secondary btn-sm"><i class="fas fa-eraser"></i> Limpar</a>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -80,19 +85,19 @@
                             <tr>
                                 <td><?= esc($situation->id) ?></td>
                                 <td><?= esc($situation->description) ?></td>
-                                <td> <?php if ($situation->type): // Assumindo 1 = Despesa 
+                                <td> <?php if ($situation->type):
                                         ?>
-                                        <span class="badge badge-danger">Despesa</span>
-                                    <?php else: // Assumindo 0 = Receita 
-                                    ?>
                                         <span class="badge badge-success">Receita</span>
+                                    <?php else:
+                                    ?>
+                                        <span class="badge badge-danger">Despesa</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="/situacoes/edit/<?= esc($situation->id) ?>" class="btn btn-sm btn-info" title="Editar">
+                                    <a href="/admin/situacoes/editar/<?= esc($situation->id) ?>" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/situacoes/delete/<?= esc($situation->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta situação? Atenção: Lançamentos associados podem ser afetados.');">
+                                    <a href="/admin/situacoes/deletar/<?= esc($situation->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta situação? Atenção: Lançamentos associados podem ser afetados.');">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -112,6 +117,9 @@
                 <?= $pager->links() ?>
             </div>
         <?php endif; ?>
-        <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
     </div>
 </div>
+<?= $this->endSection() ?>
+<?= $this->section('scripts') ?>
+<script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
+<?= $this->endSection() ?>

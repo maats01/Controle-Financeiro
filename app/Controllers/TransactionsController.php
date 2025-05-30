@@ -3,32 +3,48 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\CategoryModel;
+use App\Models\SituationModel;
 use App\Models\TransactionModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class TransactionsController extends BaseController
 {
     public function index()
     {
         $model = model(TransactionModel::class);
+        $categoryModel = model(CategoryModel::class);
+        $situationModel = model(SituationModel::class);
         $request = $this->request;
 
-        $pager = service('pager');
-        $currentPage = (int) ($request->getGet('page') ?? 1);
+        // filters
+        $startDate = $request->getGet('start_date') ?? '';
+        $endDate = $request->getGet('end_date') ?? '';
+        $type = $request->getGet('type') ?? '';
+        $description = $request->getGet('desc') ?? '';
+        $categoryId = $request->getGet('category_id') ?? '';
+        if (isset($categoryId) && is_numeric($categoryId))
+        {
+            $category = $categoryModel->find((int) $categoryId);
+        }
+        $situationId = $request->getGet('situation_id') ?? '';
+        if (isset($situationId) && is_numeric($situationId))
+        {
+            $situation = $situationModel->find((int) $situationId);
+        }
+
+
         $perPage = (int) ($request->getGet('per_page') ?? 10);
-        $total = $model->getTotalRecords();
-        $pager->makeLinks($currentPage, $perPage, $total);
 
         $data = [
-            'transactions_list' => $model->getTransactionsWithDetails($perPage, $currentPage),
+            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description)->paginate($perPage),
             'per_page' => $perPage,
-            'pager' => $pager,
+            'selected_situation' => $situation ?? null,
+            'selected_category' => $category ?? null,
+            'pager' => $model->pager,
             'title' => 'Lançamentos',
         ];
 
-        return view('templates/header', $data)
-            . view('transactions/index')
-            . view('templates/footer');
+        return view('transactions/index', $data);
     }
 
     public function create()

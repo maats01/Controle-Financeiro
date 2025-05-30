@@ -18,4 +18,19 @@ class SituationModel extends Model
     protected $returnType = Situation::class;
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
+
+    public function getFilteredSituations($searchString = '', $type = null)
+    {
+        $builder = $this->builder();
+        if ($searchString != '')
+        {
+            $builder->like('description', $searchString, 'both');
+        }
+        
+        if (is_integer($type)) {
+            $builder->where('type', $type);
+        }
+
+        return $this;
+    }
 }
