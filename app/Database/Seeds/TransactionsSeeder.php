@@ -12,7 +12,7 @@ class TransactionsSeeder extends Seeder
         $data = [
             [
                 'type'              => 'receita',
-                'date'              => '2023-01-15',
+                'date'              => '2025-01-15',
                 'category_id'       => 13,
                 'description'       => 'Salário Mensal Janeiro',
                 'amount'            => 3500.00,
@@ -24,7 +24,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2023-01-20',
+                'date'              => '2025-01-20',
                 'category_id'       => 2,
                 'description'       => 'Compras Supermercado Semanal',
                 'amount'            => 150.75,
@@ -36,7 +36,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2023-02-05',
+                'date'              => '2025-02-05',
                 'category_id'       => 7,
                 'description'       => 'Combustível Carro',
                 'amount'            => 200.00,
@@ -48,7 +48,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'receita',
-                'date'              => '2023-02-10',
+                'date'              => '2025-02-10',
                 'category_id'       => 15,
                 'description'       => 'Projeto Web Design Cliente X',
                 'amount'            => 850.00,
@@ -60,7 +60,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2023-03-01',
+                'date'              => '2025-03-01',
                 'category_id'       => 6,  // Assumed ID for 'Moradia'
                 'description'       => 'Aluguel Março',
                 'amount'            => 1200.00,
@@ -72,7 +72,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2023-03-12',
+                'date'              => '2025-03-12',
                 'category_id'       => 2,
                 'description'       => 'Jantar Restaurante Y',
                 'amount'            => 85.50,
@@ -84,7 +84,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'receita',
-                'date'              => '2023-04-05',
+                'date'              => '2025-04-05',
                 'category_id'       => 15,
                 'description'       => 'Bônus Trimestral',
                 'amount'            => 500.00,
@@ -96,7 +96,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2023-04-18',
+                'date'              => '2025-04-18',
                 'category_id'       => 1,
                 'description'       => 'Ingressos Cinema',
                 'amount'            => 60.00,
@@ -108,7 +108,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'receita',
-                'date'              => '2023-05-02',
+                'date'              => '2025-05-02',
                 'category_id'       => 15,
                 'description'       => 'Consultoria Empresa Z',
                 'amount'            => 1250.00,
@@ -120,7 +120,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2023-05-25',
+                'date'              => '2025-05-25',
                 'category_id'       => 3,
                 'description'       => 'Consulta Médica',
                 'amount'            => 300.00,

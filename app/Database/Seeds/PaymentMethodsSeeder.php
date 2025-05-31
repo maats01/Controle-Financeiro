@@ -3,13 +3,13 @@
 namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
-use App\Models\PaymentMethodsModel;
+use App\Models\PaymentMethodModel;
 
 class PaymentMethodsSeeder extends Seeder
 {
     public function run()
     {
-        $model = model(PaymentMethodsModel::class);
+        $model = model(PaymentMethodModel::class);
         $data = [
             ['description' => 'Dinheiro'],
             ['description' => 'Cartão de Débito'],

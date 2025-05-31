@@ -22,7 +22,8 @@ $routes->group('api', static function ($routes)
 });
 
 // Transactions routes
-$routes->get('/', [TransactionsController::class, 'index']);
+$routes->get('/', [TransactionsController::class, 'dashboard']);
+$routes->get('dashboard', [TransactionsController::class, 'dashboard']);
 $routes->get('lancamentos', [TransactionsController::class, 'index']);
 $routes->group('lancamentos', static function ($routes)
 {

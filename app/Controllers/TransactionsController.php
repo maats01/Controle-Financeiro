@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\SituationModel;
 use App\Models\TransactionModel;
+use CodeIgniter\I18n\Time;
 
 class TransactionsController extends BaseController
 {
@@ -45,6 +46,27 @@ class TransactionsController extends BaseController
         ];
 
         return view('transactions/index', $data);
+    }
+
+    public function dashboard()
+    {
+        $time = Time::now('America/Sao_Paulo', 'pt_BR');
+        $model = model(TransactionModel::class);
+
+        $transactions = $model->getLatestTransactions();
+        $despesasMes = $model->getCurrentCosts();
+        $receitasMes = $model->getCurrentRevenue();
+        $currentMonthYear = $time->toLocalizedString('MMMM yyyy');
+
+        $data = [
+            'transactions_list' => $transactions,
+            'despesasMes' => $despesasMes,
+            'receitasMes' => $receitasMes,
+            'saldoAtualMes' => $receitasMes - $despesasMes,
+            'title' => 'Dashboard Financeiro - ' . ucfirst($currentMonthYear), 
+        ];
+
+        return view('transactions/dashboard', $data);
     }
 
     public function create()

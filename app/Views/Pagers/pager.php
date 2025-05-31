@@ -1,5 +1,12 @@
 <?php $pager->setSurroundCount(2) ?>
 
+<div class="col-sm-12 col-md-auto mb-2 mb-md-0">
+    <p class="mb-0"> Showing <span class="font-medium"><?= $pager->getPerPageStart() ?></span>
+        to <span class="font-medium"><?= $pager->getPerPageEnd() ?></span>
+        of <span class="font-medium"><?= $pager->getTotal() ?></span> results
+    </p>
+</div>
+
 <nav aria-label="<?= lang('Pager.pageNavigation') ?? 'Page navigation' ?>">
     <ul class="pagination">
         <?php if ($pager->hasPrevious()) : ?>

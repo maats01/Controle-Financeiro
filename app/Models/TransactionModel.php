@@ -39,6 +39,7 @@ class TransactionModel extends Model
             pm.description as pm_desc,
             transactions.created_at
         ');
+
         $builder->join('categories', 'transactions.category_id = categories.id', 'left');
         $builder->join('situations', 'transactions.situation_id = situations.id', 'left');
         $builder->join('payment_methods as pm', 'transactions.payment_method_id = pm.id', 'left');
@@ -46,40 +47,97 @@ class TransactionModel extends Model
         $validStartDate = isset($startDate) && $startDate != '';
         $validEndDate = isset($endDate) && $endDate != '';
 
-        if ($validStartDate && $validEndDate)
-        {
+        if ($validStartDate && $validEndDate) {
             $builder->where('transactions.date >=', $startDate);
             $builder->where('transactions.date <=', $endDate);
-        }
-        else if ($validStartDate)
-        {
+        } else if ($validStartDate) {
             $builder->where('transactions.date >=', $startDate);
-        }
-        else if ($validEndDate)
-        {
+        } else if ($validEndDate) {
             $builder->where('transactions.date <=', $endDate);
         }
 
-        if (isset($type) && $type != '')
-        {
+        if (isset($type) && $type != '') {
             $builder->where('transactions.type', $type);
         }
 
-        if (isset($category_id) && is_numeric($category_id))
-        {
+        if (isset($category_id) && is_numeric($category_id)) {
             $builder->where('transactions.category_id', (int) $category_id);
         }
 
-        if (isset($situation_id) && is_numeric($situation_id))
-        {
+        if (isset($situation_id) && is_numeric($situation_id)) {
             $builder->where('transactions.situation_id', (int) $situation_id);
         }
 
-        if (isset($searchString) && $searchString != '')
-        {
+        if (isset($searchString) && $searchString != '') {
             $builder->like('transactions.description', $searchString, 'both');
         }
 
         return $this;
+    }
+
+    public function getLatestTransactions()
+    {
+        $builder = $this->builder();
+        $builder->select('
+            transactions.id, 
+            transactions.type, 
+            transactions.date, 
+            categories.name as category_name,
+            transactions.description,
+            transactions.amount,
+            situations.description as situation_desc,
+            pm.description as pm_desc,
+            transactions.created_at
+        ');
+
+        $builder->join('categories', 'transactions.category_id = categories.id', 'left');
+        $builder->join('situations', 'transactions.situation_id = situations.id', 'left');
+        $builder->join('payment_methods as pm', 'transactions.payment_method_id = pm.id', 'left');
+
+        $builder->where('MONTH(transactions.date)', date('n'));
+        $builder->where('YEAR(transactions.date)', date('Y'));
+        
+        $builder->orderBy('date', 'desc');
+        $query = $builder->get();
+
+        return $query->getResult();
+    }
+
+    public function getCurrentRevenue()
+    {
+        $builder = $this->builder();
+        $builder->select('SUM(transactions.amount) as total_value');
+        $builder->where('transactions.type', 'receita');
+        $builder->where('MONTH(transactions.date)', date('n'));
+        $builder->where('YEAR(transactions.date)', date('Y'));
+
+        $query = $builder->get();
+        $row = $query->getRow();
+
+        if ($row && isset($row->total_value))
+        {
+            return (float) $row->total_value;
+        }
+
+        return 0.0;
+    }
+
+    public function getCurrentCosts()
+    {
+        $builder = $this->builder();
+        $builder->select('SUM(transactions.amount) as total_value');
+        $builder->where('transactions.type', 'despesa');
+        $builder->where('MONTH(transactions.date)', date('n'));
+        $builder->where('YEAR(transactions.date)', date('Y'));
+
+        $query = $builder->get();
+        $row = $query->getRow();
+
+        if ($row && isset($row->total_value))
+        {
+            return (float) $row->total_value;
+        }
+
+        return 0.0;
     }
 }
