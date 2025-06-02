@@ -1,4 +1,8 @@
 # Controle-Financeiro
+Esse sistema foi desenvolvido como projeto final da disciplina de Programação-3 da faculdade.
+
+## Visão geral
+A aplicação tem o objetivo de auxiliar o usuário no controle financeiro do mês, permitindo que ele cadastre os ganhos e despesas.
 
 ## Requisitos
 - PHP 8.1 ou superior
