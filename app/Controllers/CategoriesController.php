@@ -28,12 +28,36 @@ class CategoriesController extends BaseController
 
     public function create()
     {
-        // TODO
+        $data = [
+            'title' => 'Criar categoria',
+        ];
+        return view('categories/create', $data);
     }
 
     public function createPost()
     {
-        // TODO
+        $model = model(categoryModel::class);
+
+        $regras = [
+            'name' => 'required|min_length[3]|max_length[255]',
+            'type' => 'required|in_list[0,1]',
+        ];
+
+        if(! $this -> validate($regras)){
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $category = new Category();
+        $category->fill($this->request->getPost());
+        $category->type = (bool) $this->request->getPost('type');
+
+        if($model->save($category)){
+          session()->setFlashdata('success', 'Categoria adicionada com sucesso!');
+          return redirect()->to('/admin/categorias');  
+        }else{
+            session()->setFlashdata('error', 'Erro ao adicionar categoria. Tente novamente.');
+            return redirect()->back()->withInput();
+        }
     }
 
     public function edit(int $id)
@@ -43,6 +67,20 @@ class CategoriesController extends BaseController
 
     public function delete(int $id)
     {
-        // TODO
+        $model = model(CategoryModel::class);
+        
+        if(empty($id)){
+            session()->setFlashdata('error','Categoria não encontrada para exclusão.');
+            return redirect()->to('admin/categorias');
+        }
+        
+        if($model->delete($id)){
+            session()->setFlashdata('sucess', 'Categoria excluída com sucesso!');
+        }else{
+            session()->setFlashdata('error', 'Erro ao excluir categoria. Tente novamente mais tarde!');
+        }
+
+        return redirect()->to('/admin/categorias');
+
     }
 }

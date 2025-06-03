@@ -97,12 +97,14 @@
                                     <?php endif; ?>
                                 </td>
                                 <td>
+                                    <form method="POST">
                                     <a href="/admin/categorias/editar/<?= esc($category->id) ?>" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <a href="/admin/categorias/deletar/<?= esc($category->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta categoria? Atenção: Lançamentos associados podem ser afetados.');">
                                         <i class="fas fa-trash"></i>
                                     </a>
+                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

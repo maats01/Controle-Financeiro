@@ -39,7 +39,8 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     $routes->get('categorias', [CategoriesController::class, 'index']);
     $routes->group('categorias', static function ($routes)
     {
-        $routes->post('criar', [CategoriesController::class, 'create']);
+        $routes->get('criar', [categoriesController::class, 'create']);
+        $routes->post('salvar', [CategoriesController::class, 'createPost']);
         $routes->put('editar/(:num)', [CategoriesController::class, 'edit']);
         $routes->delete('deletar/(:num)', [CategoriesController::class, 'delete']);
     });
