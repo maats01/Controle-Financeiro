@@ -27,7 +27,8 @@ $routes->get('dashboard', [TransactionsController::class, 'dashboard']);
 $routes->get('lancamentos', [TransactionsController::class, 'index']);
 $routes->group('lancamentos', static function ($routes)
 {
-    $routes->post('criar', [TransactionsController::class, 'create']);
+    $routes->get('criar', [TransactionsController::class, 'create']);
+    $routes->post('criar', [TransactionsController::class, 'createPost']);
     $routes->put('editar/(:num)', [TransactionsController::class, 'edit']);
     $routes->delete('deletar/(:num)', [TransactionsController::class, 'delete']);
 });

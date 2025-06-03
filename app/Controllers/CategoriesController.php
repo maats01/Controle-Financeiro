@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Entities\Category;
 use App\Models\CategoryModel;
 
 class CategoriesController extends BaseController
@@ -26,6 +27,11 @@ class CategoriesController extends BaseController
     }
 
     public function create()
+    {
+        // TODO
+    }
+
+    public function createPost()
     {
         // TODO
     }

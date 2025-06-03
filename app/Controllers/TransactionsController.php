@@ -13,6 +13,8 @@ class TransactionsController extends BaseController
     public function index()
     {
         $model = model(TransactionModel::class);
+        $currentUser = auth()->user();
+
         $categoryModel = model(CategoryModel::class);
         $situationModel = model(SituationModel::class);
         $request = $this->request;
@@ -37,7 +39,7 @@ class TransactionsController extends BaseController
         $perPage = (int) ($request->getGet('per_page') ?? 10);
 
         $data = [
-            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description)->paginate($perPage),
+            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description, $currentUser->id)->paginate($perPage),
             'per_page' => $perPage,
             'selected_situation' => $situation ?? null,
             'selected_category' => $category ?? null,
@@ -51,11 +53,12 @@ class TransactionsController extends BaseController
     public function dashboard()
     {
         $time = Time::now('America/Sao_Paulo', 'pt_BR');
+        $currentUser = auth()->user();
         $model = model(TransactionModel::class);
 
-        $transactions = $model->getLatestTransactions();
-        $despesasMes = $model->getCurrentCosts();
-        $receitasMes = $model->getCurrentRevenue();
+        $transactions = $model->getLatestTransactions($currentUser->id);
+        $despesasMes = $model->getCurrentCosts($currentUser->id);
+        $receitasMes = $model->getCurrentRevenue($currentUser->id);
         $currentMonthYear = $time->toLocalizedString('MMMM yyyy');
 
         $data = [

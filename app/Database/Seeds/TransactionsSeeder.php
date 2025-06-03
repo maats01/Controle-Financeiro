@@ -61,7 +61,7 @@ class TransactionsSeeder extends Seeder
             [
                 'type'              => 'despesa',
                 'date'              => '2025-03-01',
-                'category_id'       => 6,  // Assumed ID for 'Moradia'
+                'category_id'       => 6,
                 'description'       => 'Aluguel Março',
                 'amount'            => 1200.00,
                 'situation_id'      => 2,
@@ -84,7 +84,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'receita',
-                'date'              => '2025-04-05',
+                'date'              => '2025-06-05',
                 'category_id'       => 15,
                 'description'       => 'Bônus Trimestral',
                 'amount'            => 500.00,
@@ -96,7 +96,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2025-04-18',
+                'date'              => '2025-06-18',
                 'category_id'       => 1,
                 'description'       => 'Ingressos Cinema',
                 'amount'            => 60.00,
@@ -108,7 +108,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'receita',
-                'date'              => '2025-05-02',
+                'date'              => '2025-06-02',
                 'category_id'       => 15,
                 'description'       => 'Consultoria Empresa Z',
                 'amount'            => 1250.00,
@@ -120,7 +120,7 @@ class TransactionsSeeder extends Seeder
             ],
             [
                 'type'              => 'despesa',
-                'date'              => '2025-05-25',
+                'date'              => '2025-06-25',
                 'category_id'       => 3,
                 'description'       => 'Consulta Médica',
                 'amount'            => 300.00,

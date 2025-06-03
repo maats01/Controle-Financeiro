@@ -25,7 +25,7 @@ class TransactionModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
-    public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString)
+    public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString, $userId)
     {
         $builder = $this->builder();
         $builder->select('
@@ -72,10 +72,12 @@ class TransactionModel extends Model
             $builder->like('transactions.description', $searchString, 'both');
         }
 
+        $builder->where('transactions.user_id', $userId);
+
         return $this;
     }
 
-    public function getLatestTransactions()
+    public function getLatestTransactions($userId)
     {
         $builder = $this->builder();
         $builder->select('
@@ -96,6 +98,7 @@ class TransactionModel extends Model
 
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
+        $builder->where('transactions.user_id', $userId);
         
         $builder->orderBy('date', 'desc');
         $query = $builder->get();
@@ -103,13 +106,14 @@ class TransactionModel extends Model
         return $query->getResult();
     }
 
-    public function getCurrentRevenue()
+    public function getCurrentRevenue($userId)
     {
         $builder = $this->builder();
         $builder->select('SUM(transactions.amount) as total_value');
         $builder->where('transactions.type', 'receita');
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
+        $builder->where('transactions.user_id', $userId);
 
         $query = $builder->get();
         $row = $query->getRow();
@@ -122,13 +126,14 @@ class TransactionModel extends Model
         return 0.0;
     }
 
-    public function getCurrentCosts()
+    public function getCurrentCosts($userId)
     {
         $builder = $this->builder();
         $builder->select('SUM(transactions.amount) as total_value');
         $builder->where('transactions.type', 'despesa');
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
+        $builder->where('transactions.user_id', $userId);
 
         $query = $builder->get();
         $row = $query->getRow();
