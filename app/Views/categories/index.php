@@ -97,14 +97,18 @@
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <form method="POST">
                                     <a href="/admin/categorias/editar/<?= esc($category->id) ?>" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/admin/categorias/deletar/<?= esc($category->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta categoria? Atenção: Lançamentos associados podem ser afetados.');">
+                                    <a href="#" class="btn btn-danger btn-circle btn-sm" title="Deletar"
+                                        data-toggle="modal"
+                                        data-target="#deleteModal"
+                                        data-id="<?= $category->id ?>"
+                                        data-name="<?= $category->name ?>"
+                                        data-controller="categorias"
+                                        data-base="/admin">
                                         <i class="fas fa-trash"></i>
                                     </a>
-                                    </form>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -124,7 +128,31 @@
         <?php endif; ?>
     </div>
 </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir a categoria <strong id="itemNameToDelete"></strong>?
+                <p class="text-danger mt-2">Esta ação não pode ser desfeita.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" action="" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
+<script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
 <?= $this->endSection() ?>
