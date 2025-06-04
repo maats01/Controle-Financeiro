@@ -57,9 +57,51 @@ class PaymentMethodsController extends BaseController
         }
     }
 
-    public function edit(int $id)
+public function edit(int $id)
     {
-        // TODO
+        $model = model(PaymentMethodModel::class);
+        $paymentMethod = $model->find($id);
+
+        if (empty($paymentMethod)) {
+            session()->setFlashdata('error', 'Método de pagamento não encontrado.');
+            return redirect()->to('admin/formas-de-pagamento');
+        }
+
+        $data = [
+            'title' => 'Editar método de pagamento',
+            'payment_method' => $paymentMethod,
+        ];
+
+        return view('payment_methods/edit', $data);
+    }
+
+    public function editPost()
+    {
+        $model = model(PaymentMethodModel::class);
+
+        $postData = $this->request->getPost();
+
+        $paymentMethod = $model->find($postData['id']);
+
+        if (empty($paymentMethod)) {
+            session()->setFlashdata('error', 'Método de pagamento não encontrado para atualização.');
+            return redirect()->to('admin/formas-de-pagamento');
+        }
+
+        $paymentMethod->fill($postData);
+
+        if (!$paymentMethod->hasChanged()) {
+            session()->setFlashdata('info', 'Nenhuma alteração detectada para o método de pagamento.');
+            return redirect()->to('admin/formas-de-pagamento');
+        }
+
+        if ($model->save($paymentMethod)) {
+            session()->setFlashdata('success', 'Método de pagamento atualizado com sucesso!');
+            return redirect()->to('admin/formas-de-pagamento');
+        } else {
+            session()->setFlashdata('error', 'Erro ao atualizar método de pagamento. Verifique os dados e tente novamente.');
+            return redirect()->back()->withInput()->with('errors', $model->errors());
+        }
     }
 
     public function delete(int $id)

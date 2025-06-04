@@ -62,7 +62,49 @@ class CategoriesController extends BaseController
 
     public function edit(int $id)
     {
-        // TODO
+        $model = model(CategoryModel::class);
+        $category = $model->find($id);
+
+        if(empty($category)){
+            session()->setFlashdata('error', 'Categoria não encontrada.');
+            return redirect()->to('admin/categorias');
+        }
+
+        $data = [
+            'title' => 'Editar categoria'
+        ];
+
+        return view('categorias/edit', $data);
+
+    }
+
+    public function editPost()
+    {   
+        $model = model(CategoryModel::class);
+
+        $postData = $this->request->getPost();
+
+        $category = $model->find($postData['id']);
+
+        if(empty($category)){
+            session()->setFlashdata('error', 'Categoria não encontrada para atualização.');
+            return redirect()->to('admin/categorias');
+        }
+
+        $category->fill($postData);
+
+        if(!$category->haschanged()){
+            session()->setFlashdata('info', 'Nenhuma alteração detectada para a categoria.');
+            return redirect()->to('admin/categorias');
+        }
+
+        if($model->save($category)){
+            session()->setFlashdata('success', 'Categoria atualizada com sucesso!');
+            return redirect()->to('admin/categorias');
+        }else{
+            session()->setFlashdata('error', 'Erro ao atualizar a categoria. Verifique os dados e tente novamente.');
+            return redirect()->back()->withInput()->with('errors', $model->errors());
+        }
     }
 
     public function delete(int $id)

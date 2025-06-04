@@ -41,7 +41,8 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     {
         $routes->get('criar', [categoriesController::class, 'create']);
         $routes->post('salvar', [CategoriesController::class, 'createPost']);
-        $routes->post('editar/(:num)', [CategoriesController::class, 'edit/$1']);
+        $routes->get('editar/(:num)', [CategoriesController::class, 'edit/$1']);
+        $routes->post('atualizar', [CategoriesController::class, 'editPost']);
         $routes->post('deletar/(:num)', [CategoriesController::class, 'delete/$1']);
     });
 
@@ -51,7 +52,8 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     {   
         $routes->get('criar', [SituationsController::class, 'create']);
         $routes->post('salvar', [SituationsController::class, 'createPost']);
-        $routes->post('editar/(:num)', [SituationsController::class, 'edit/$1']);
+        $routes->get('editar/(:num)', [SituationsController::class, 'edit/$1']);
+        $routes->post('atualizar', [SituationsController::class, 'editPost']);
         $routes->post('deletar/(:num)', [SituationsController::class, 'delete/$1']);
     });
 
@@ -61,7 +63,8 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     {
         $routes->get('criar', [PaymentMethodsController::class, 'create']);
         $routes->post('salvar', [PaymentMethodsController::class, 'createPost']);
-        $routes->post('editar/(:num)', [PaymentMethodsController::class, 'edit/$1']);
+        $routes->get('editar/(:num)', [PaymentMethodsController::class, 'edit/$1']);
+        $routes->post('atualizar', [PaymentMethodsController::class, 'editPost']);
         $routes->post('deletar/(:num)', [PaymentMethodsController::class, 'delete/$1']);
     });
 
