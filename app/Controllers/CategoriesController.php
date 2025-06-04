@@ -75,7 +75,7 @@ class CategoriesController extends BaseController
         }
         
         if($model->delete($id)){
-            session()->setFlashdata('sucess', 'Categoria excluída com sucesso!');
+            session()->setFlashdata('success', 'Categoria excluída com sucesso!');
         }else{
             session()->setFlashdata('error', 'Erro ao excluir categoria. Tente novamente mais tarde!');
         }

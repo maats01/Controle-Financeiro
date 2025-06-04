@@ -64,6 +64,20 @@ class PaymentMethodsController extends BaseController
 
     public function delete(int $id)
     {
-        // TODO
+        $model = model(PaymentMethodModel::class);
+
+        if(empty($id)){
+            session()->setFlashdata('error', 'Método de pagamento não encontrado para exclusão.');
+            return redirect()->to('admin/formas-de-pagamento');
+        }
+
+        if($model->delete($id)){
+            session()->setFlashdata('success', 'Método de pagamento excluído com sucesso!');
+        }else{
+            session()->setFlashdata('error', 'Erro ao excluir forma de pagamento. Tente novamente mais tarde!');
+        }
+
+        return redirect()->to('/admin/formas-de-pagamento');
+
     }
 }

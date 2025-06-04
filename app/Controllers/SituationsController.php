@@ -76,7 +76,7 @@ class SituationsController extends BaseController
         }
 
         if($model->delete($id)){
-            session()->setFlashdata('sucess', 'Situação excluída com sucesso!');
+            session()->setFlashdata('success', 'Situação excluída com sucesso!');
         }else{
             session()->setFlashdata('error', 'Erro ao excluir situação. Tente novamente mais tarde!');
         }

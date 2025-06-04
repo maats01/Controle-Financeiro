@@ -74,17 +74,23 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($payment_methods_list) && is_array($payment_methods_list)): ?>
-                        <?php foreach ($payment_methods_list as $pm): ?>
+                        <?php foreach ($payment_methods_list as $paymentMethod): // Alterado de $pm para $paymentMethod ?>
                             <tr>
-                                <td><?= esc($pm->id) ?></td>
-                                <td><?= esc($pm->description) ?></td>
+                                <td><?= esc($paymentMethod->id) ?></td>
+                                <td><?= esc($paymentMethod->description) ?></td>
                                 <td>
-                                    <a href="/admin/formas-de-pagamento/editar/<?= esc($pm->id) ?>" class="btn btn-sm btn-info" title="Editar">
+                                    <a href="/admin/formas-de-pagamento/editar/<?= esc($paymentMethod->id) ?>" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/admin/formas-de-pagamento/deletar/<?= esc($pm->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta forma de pagamento? Atenção: Lançamentos associados podem ser afetados.');">
+                                    <button type="button" class="btn btn-danger btn-circle btn-sm" title="Deletar"
+                                        data-toggle="modal"
+                                        data-target="#deleteModal"
+                                        data-id="<?= esc($paymentMethod->id) ?>"
+                                        data-name="<?= esc($paymentMethod->description) ?>"
+                                        data-controller="formas-de-pagamento"
+                                        data-base="/admin">
                                         <i class="fas fa-trash"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -104,7 +110,34 @@
         <?php endif; ?>
     </div>
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir o método de pagamento <strong id="itemNameToDelete"></strong>?
+                <p class="text-danger mt-2">Esta ação não pode ser desfeita e pode afetar lançamentos associados.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" action="" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
+
 <?= $this->section('scripts') ?>
 <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
+<script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <?= $this->endSection() ?>
