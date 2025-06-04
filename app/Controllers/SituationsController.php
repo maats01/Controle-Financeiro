@@ -68,6 +68,19 @@ class SituationsController extends BaseController
 
     public function delete(int $id)
     {
-        // TODO
+        $model = model(SituationModel::class);
+
+        if(empty($id)){
+            session()->setFlashdata('error', 'Situação não encontrada para exclusão.');
+            return redirect()->to('admin/situacoes');
+        }
+
+        if($model->delete($id)){
+            session()->setFlashdata('sucess', 'Situação excluída com sucesso!');
+        }else{
+            session()->setFlashdata('error', 'Erro ao excluir situação. Tente novamente mais tarde!');
+        }
+
+        return redirect()->to('admin/situacoes');
     }
 }

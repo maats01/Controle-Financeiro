@@ -85,19 +85,23 @@
                             <tr>
                                 <td><?= esc($situation->id) ?></td>
                                 <td><?= esc($situation->description) ?></td>
-                                <td> <?php if ($situation->type):
-                                        ?>
+                                <td> <?php if ($situation->type): ?>
                                         <span class="badge badge-success">Receita</span>
-                                    <?php else:
-                                    ?>
+                                    <?php else: ?>
                                         <span class="badge badge-danger">Despesa</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <a href="/admin/situacoes/editar/<?= esc($situation->id) ?>" class="btn btn-sm btn-info" title="Editar">
+                                     <a href="/admin/situacoes/editar/<?= esc($situation->id) ?>" class="btn btn-sm btn-info" title="Editar">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/admin/situacoes/deletar/<?= esc($situation->id) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir esta situação? Atenção: Lançamentos associados podem ser afetados.');">
+                                    <a href="#" class="btn btn-danger btn-circle btn-sm" title="Deletar"
+                                        data-toggle="modal"
+                                        data-target="#deleteModal"
+                                        data-id="<?= $situation->id ?>"
+                                        data-name="<?= $situation->description ?>"
+                                        data-controller="situacoes"
+                                        data-base="/admin">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -119,7 +123,32 @@
         <?php endif; ?>
     </div>
 </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir a situação <strong id="itemNameToDelete"></strong>?
+                <p class="text-danger mt-2">Esta ação não pode ser desfeita e pode afetar lançamentos associados.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" action="" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
+<script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
 <?= $this->endSection() ?>
