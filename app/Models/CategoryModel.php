@@ -19,8 +19,8 @@ class CategoryModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
-    protected $validationRegras = [
-        'name' => 'required|min_lenght[3]|max_length[255]',
+    protected $validationRules = [
+        'name' => 'required|min_length[3]|max_length[255]',
         'type' => 'required|in_list[0,1]',
     ];
 

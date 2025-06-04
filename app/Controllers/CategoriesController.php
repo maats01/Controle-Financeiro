@@ -38,18 +38,18 @@ class CategoriesController extends BaseController
     {
         $model = model(categoryModel::class);
 
-        $regras = [
+        $rules = [
             'name' => 'required|min_length[3]|max_length[255]',
             'type' => 'required|in_list[0,1]',
         ];
 
-        if(! $this -> validate($regras)){
+        if(! $this -> validate($rules)){
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $category = new Category();
         $category->fill($this->request->getPost());
-        $category->type = (bool) $this->request->getPost('type');
+        $category->type = (int) $this->request->getPost('type');
 
         if($model->save($category)){
           session()->setFlashdata('success', 'Categoria adicionada com sucesso!');

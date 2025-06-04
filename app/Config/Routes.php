@@ -48,8 +48,9 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     // Situations routes
     $routes->get('situacoes', [SituationsController::class, 'index']);
     $routes->group('situacoes', static function ($routes)
-    {
-        $routes->post('criar', [SituationsController::class, 'create']);
+    {   
+        $routes->get('criar', [SituationsController::class, 'create']);
+        $routes->post('salvar', [SituationsController::class, 'createPost']);
         $routes->put('editar/(:num)', [SituationsController::class, 'edit']);
         $routes->delete('deletar/(:num)', [SituationsController::class, 'delete']);
     });
@@ -58,7 +59,8 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     $routes->get('formas-de-pagamento', [PaymentMethodsController::class, 'index']);
     $routes->group('formas-de-pagamento', static function ($routes)
     {
-        $routes->post('criar', [PaymentMethodsController::class, 'create']);
+        $routes->get('criar', [PaymentMethodsController::class, 'create']);
+        $routes->post('salvar', [PaymentMethodsController::class, 'createPost']);
         $routes->put('editar/(:num)', [PaymentMethodsController::class, 'edit']);
         $routes->delete('deletar/(:num)', [PaymentMethodsController::class, 'delete']);
     });

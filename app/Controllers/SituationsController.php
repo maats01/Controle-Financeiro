@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Entities\Situation;
 use App\Models\SituationModel;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -24,5 +25,49 @@ class SituationsController extends BaseController
         ]; 
 
         return view('situations/index', $data);
+    }
+
+    public function create()
+    {
+        $data = [
+            'title' => 'Criar situação'
+        ];
+        return view('situations/create', $data);
+    }
+
+    public function createPost()
+    {
+        $model = model(SituationModel::class);
+
+        $rules = [
+            'description' => 'required|min_length[3]|max_length[255]',
+            'type' => 'required|in_list[0,1]',
+        ];
+
+        if(! $this -> validate($rules)){
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $situation = new Situation();
+        $situation->fill($this->request->getPost());
+        $situation->type = (int) $this->request->getPost('type');
+
+        if($model->save($situation)){
+            session()->setFlashdata('success', 'Situação adicionada com sucesso!');
+            return redirect()->to('admin/situacoes');
+        }else{
+            session()->setFlashdata('error', 'Erro ao adicionar situação. Tente novamente.');
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function edit(int $id)
+    {
+        // TODO
+    }
+
+    public function delete(int $id)
+    {
+        // TODO
     }
 }
