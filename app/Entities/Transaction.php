@@ -10,7 +10,7 @@ class Transaction extends Entity
     protected $dates   = ['created_at', 'updated_at', 'deleted_at'];
     protected $casts   = [
         'id'                => 'integer',
-        'type'              => 'string',
+        'type'              => 'boolean',
         'date'              => 'datetime',
         'category_id'       => 'integer',
         'description'       => 'string',

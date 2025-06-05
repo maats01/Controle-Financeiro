@@ -11,7 +11,7 @@ class TransactionsSeeder extends Seeder
     {
         $data = [
             [
-                'type'              => 'receita',
+                'type'              => '1',
                 'date'              => '2025-01-15',
                 'category_id'       => 13,
                 'description'       => 'Salário Mensal Janeiro',
@@ -23,7 +23,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'despesa',
+                'type'              => '0',
                 'date'              => '2025-01-20',
                 'category_id'       => 2,
                 'description'       => 'Compras Supermercado Semanal',
@@ -35,7 +35,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'despesa',
+                'type'              => '0',
                 'date'              => '2025-02-05',
                 'category_id'       => 7,
                 'description'       => 'Combustível Carro',
@@ -47,7 +47,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'receita',
+                'type'              => '1',
                 'date'              => '2025-02-10',
                 'category_id'       => 15,
                 'description'       => 'Projeto Web Design Cliente X',
@@ -59,7 +59,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'despesa',
+                'type'              => '0',
                 'date'              => '2025-03-01',
                 'category_id'       => 6,
                 'description'       => 'Aluguel Março',
@@ -71,7 +71,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'despesa',
+                'type'              => '0',
                 'date'              => '2025-03-12',
                 'category_id'       => 2,
                 'description'       => 'Jantar Restaurante Y',
@@ -83,7 +83,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'receita',
+                'type'              => '1',
                 'date'              => '2025-06-05',
                 'category_id'       => 15,
                 'description'       => 'Bônus Trimestral',
@@ -95,7 +95,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'despesa',
+                'type'              => '0',
                 'date'              => '2025-06-18',
                 'category_id'       => 1,
                 'description'       => 'Ingressos Cinema',
@@ -107,7 +107,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'receita',
+                'type'              => '1',
                 'date'              => '2025-06-02',
                 'category_id'       => 15,
                 'description'       => 'Consultoria Empresa Z',
@@ -119,7 +119,7 @@ class TransactionsSeeder extends Seeder
                 'updated_at'        => Time::now()->toDateTimeString(),
             ],
             [
-                'type'              => 'despesa',
+                'type'              => '0',
                 'date'              => '2025-06-25',
                 'category_id'       => 3,
                 'description'       => 'Consulta Médica',

@@ -35,7 +35,6 @@ class TransactionsController extends BaseController
             $situation = $situationModel->find((int) $situationId);
         }
 
-
         $perPage = (int) ($request->getGet('per_page') ?? 10);
 
         $data = [

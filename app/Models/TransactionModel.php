@@ -110,7 +110,7 @@ class TransactionModel extends Model
     {
         $builder = $this->builder();
         $builder->select('SUM(transactions.amount) as total_value');
-        $builder->where('transactions.type', 'receita');
+        $builder->where('transactions.type', 1);
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.user_id', $userId);
@@ -130,7 +130,7 @@ class TransactionModel extends Model
     {
         $builder = $this->builder();
         $builder->select('SUM(transactions.amount) as total_value');
-        $builder->where('transactions.type', 'despesa');
+        $builder->where('transactions.type', 0);
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.user_id', $userId);

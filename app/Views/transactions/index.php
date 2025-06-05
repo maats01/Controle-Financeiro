@@ -26,8 +26,8 @@
                         <label for="tipo">Tipo</label>
                         <select id="tipo" name="type" class="form-control form-control-sm">
                             <option value="">Todos</option>
-                            <option value="receita" <?= (isset($_GET['type']) && $_GET['type'] == 'receita') ? 'selected' : '' ?>>Receita</option>
-                            <option value="despesa" <?= (isset($_GET['type']) && $_GET['type'] == 'despesa') ? 'selected' : '' ?>>Despesa</option>
+                            <option value="1" <?= (isset($_GET['type']) && $_GET['type'] == '1') ? 'selected' : '' ?>>Receita</option>
+                            <option value="0" <?= (isset($_GET['type']) && $_GET['type'] == '0') ? 'selected' : '' ?>>Despesa</option>
                         </select>
                     </div>
                     <div class="form-group col-md-3">
@@ -96,7 +96,6 @@
                         <select name="per_page" aria-controls="dataTable" class="custom-select custom-select-sm form-control-sm d-inline-block" style="width: auto;" oninput="handlePerPageChange(this)">
                             <?php
                             $per_page_options = [10, 25, 50, 100];
-                            // Assegure que $per_page seja passado pelo controller ou tenha um valor padrão
                             $current_per_page = isset($per_page) ? $per_page : 10;
 
                             foreach ($per_page_options as $option_val) {
@@ -134,16 +133,14 @@
                                 <td><?= esc($transaction->description) ?></td>
                                 <td><?= esc($transaction->category_name) ?></td>
                                 <td>
-                                    <?php if (strtolower($transaction->type) == 'receita'): ?>
+                                    <?php if ($transaction->type): ?>
                                         <span class="badge badge-success">Receita</span>
-                                    <?php elseif (strtolower($transaction->type) == 'despesa'): ?>
-                                        <span class="badge badge-danger">Despesa</span>
                                     <?php else: ?>
-                                        <?= esc($transaction->type) ?>
+                                        <span class="badge badge-danger">Despesa</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="<?= strtolower($transaction->type) == 'receita' ? 'text-success font-weight-bold' : (strtolower($transaction->type) == 'despesa' ? 'text-danger font-weight-bold' : '') ?>">
-                                    <?= (strtolower($transaction->type) == 'receita' ? '+ ' : (strtolower($transaction->type) == 'despesa' ? '- ' : '')) ?>
+                                <td class="<?= $transaction->type ? 'text-success font-weight-bold' : ($transaction->type == false ? 'text-danger font-weight-bold' : '') ?>">
+                                    <?= $transaction->type ? '+ ' : ($transaction->type == false ? '- ' : '') ?>
                                     R$ <?= esc(number_format($transaction->amount, 2, ',', '.')) ?>
                                 </td>
                                 <td><?= esc($transaction->situation_desc) ?></td>

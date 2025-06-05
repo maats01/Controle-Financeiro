@@ -117,17 +117,14 @@
                                         <td><?= esc($transaction->category_name ?? 'N/A') ?></td>
                                         <td>
                                             <?php
-                                            $tipoLower = strtolower($transaction->type);
-                                            if ($tipoLower == 'receita'): ?>
+                                            if ($transaction->type): ?>
                                                 <span class="badge badge-success">Receita</span>
-                                            <?php elseif ($tipoLower == 'despesa'): ?>
-                                                <span class="badge badge-danger">Despesa</span>
                                             <?php else: ?>
-                                                <span class="badge badge-secondary"><?= esc($transaction->type) ?></span>
+                                                <span class="badge badge-danger">Despesa</span>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="<?= $tipoLower == 'receita' ? 'text-success font-weight-bold' : ($tipoLower == 'despesa' ? 'text-danger font-weight-bold' : '') ?>">
-                                            <?= ($tipoLower == 'receita' ? '+ ' : ($tipoLower == 'despesa' ? '- ' : '')) ?>
+                                        <td class="<?= $transaction->type ? 'text-success font-weight-bold' : ($transaction->type == false ? 'text-danger font-weight-bold' : '') ?>">
+                                            <?= ($transaction->type ? '+ ' : ($transaction->type == false ? '- ' : '')) ?>
                                             R$ <?= esc(number_format($transaction->amount, 2, ',', '.')) ?>
                                         </td>
                                         <td><?= esc($transaction->situation_desc ?? 'N/A')?></td>

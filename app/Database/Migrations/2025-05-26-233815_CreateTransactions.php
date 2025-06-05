@@ -10,7 +10,7 @@ class CreateTransactions extends Migration
     {
         $this->forge->addField([
             'id'                 => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
-            'type'               => ['type' => 'ENUM', 'constraint' => ['receita', 'despesa']],
+            'type'               => ['type' => 'BOOLEAN'], // 0 - despesa ; 1 - receita
             'date'               => ['type' => 'DATE'],
             'category_id'        => ['type' => 'INT', 'unsigned' => true],
             'description'        => ['type' => 'VARCHAR', 'constraint' => 255],
