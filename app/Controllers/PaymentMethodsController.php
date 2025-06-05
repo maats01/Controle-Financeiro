@@ -14,13 +14,15 @@ class PaymentMethodsController extends BaseController
         $request = $this->request;
         $perPage = (int) ($request->getGet('per_page') ?? 10);
         $searchString = $request->getGet('desc') ?? '';
-        
+        $sortBy = $request->getGet('sort') ?? 'id';
+        $sortOrder = $request->getGet('order') ?? 'DESC';
+
         $data = [
             'title' => 'Formas de Pagamento',
-            'payment_methods_list' => $model->getFilteredPaymentMethods($searchString)->paginate($perPage),
+            'payment_methods_list' => $model->getFilteredPaymentMethods($searchString, $sortBy, $sortOrder)->paginate($perPage),
             'per_page' => $perPage,
             'pager' => $model->pager,
-        ]; 
+        ];
 
         return view('payment_methods/index', $data);
     }
@@ -41,23 +43,23 @@ class PaymentMethodsController extends BaseController
             'description' => 'required|min_length[3]|max_length[255]',
         ];
 
-        if(! $this -> validate($rules)){
+        if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
         $paymentMethods = new paymentMethod();
         $paymentMethods->fill($this->request->getPost());
 
-        if($model->save($paymentMethods)){
+        if ($model->save($paymentMethods)) {
             session()->setFlashdata('success', 'Método de pagamento adicionado com sucesso!');
             return redirect()->to('admin/formas-de-pagamento');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao adicionar método de pagamento. Tente novamente. ');
             return redirect()->back()->withInput();
         }
     }
 
-public function edit(int $id)
+    public function edit(int $id)
     {
         $model = model(PaymentMethodModel::class);
         $paymentMethod = $model->find($id);
@@ -108,18 +110,17 @@ public function edit(int $id)
     {
         $model = model(PaymentMethodModel::class);
 
-        if(empty($id)){
+        if (empty($id)) {
             session()->setFlashdata('error', 'Método de pagamento não encontrado para exclusão.');
             return redirect()->to('admin/formas-de-pagamento');
         }
 
-        if($model->delete($id)){
+        if ($model->delete($id)) {
             session()->setFlashdata('success', 'Método de pagamento excluído com sucesso!');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao excluir forma de pagamento. Tente novamente mais tarde!');
         }
 
         return redirect()->to('/admin/formas-de-pagamento');
-
     }
 }

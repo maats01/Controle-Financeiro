@@ -37,7 +37,7 @@ class CategoryModel extends Model
     ];
     protected $skipValidation = false;
 
-    public function getFilteredCategories($searchString = '', $type = null)
+    public function getFilteredCategories($searchString = '', $type = null, $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
         if ($searchString != '')
@@ -48,6 +48,8 @@ class CategoryModel extends Model
         {
             $builder->where('type', $type);
         }
+
+        $builder->orderBy($sortBy, $sortOrder);
 
         return $this;
     }

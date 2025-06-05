@@ -25,7 +25,7 @@ class TransactionModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
-    public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString, $userId)
+    public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString, $userId, $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
         $builder->select('
@@ -73,6 +73,8 @@ class TransactionModel extends Model
         }
 
         $builder->where('transactions.user_id', $userId);
+        
+        $builder->orderBy($sortBy, $sortOrder);
 
         return $this;
     }

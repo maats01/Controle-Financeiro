@@ -1,6 +1,20 @@
 <?= $this->extend('Layouts/default') ?>
 <?= $this->section('content') ?>
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<?php
+require_once APPPATH . 'Helpers\sortingHelper.php';
+
+$currentSortBy = isset($_GET['sort']) ? $_GET['sort'] : ''; 
+$currentSortOrder = isset($_GET['order']) ? strtolower($_GET['order']) : 'asc';
+
+$currentFilters = [];
+if (isset($_GET['username'])) $currentFilters['username'] = $_GET['username'];
+if (isset($_GET['email'])) $currentFilters['email'] = $_GET['email'];
+if (isset($_GET['active'])) $currentFilters['active'] = $_GET['active'];
+if (isset($_GET['per_page'])) $currentFilters['per_page'] = $_GET['per_page'];
+
+$baseUrl = '/admin/usuarios';
+?>
+<div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Usuários' ?></h1>
     <a href="/admin/usuarios/criar" class="btn btn-primary shadow-sm">
         <i class="fas fa-user-plus fa-sm text-white-50"></i> Adicionar Usuário
@@ -79,13 +93,13 @@
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th style="width: 5%;">ID</th>
-                        <th>Username</th>
-                        <th>Email</th> 
-                        <th>Grupo</th>
-                        <th style="width: 10%;">Status</th>
-                        <th style="width: 15%;">Último Acesso</th>
-                        <th style="width: 15%;">Criado em</th>
+                        <th style="width: 5%;"><?= generateSortLink($baseUrl, 'id', 'ID', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'username', 'Username', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'email', 'Email', $currentSortBy, $currentSortOrder, $currentFilters)?></th> 
+                        <th><?= generateSortLink($baseUrl, 'group', 'Grupo', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th style="width: 10%;"><?= generateSortLink($baseUrl, 'status', 'Status', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th style="width: 15%;"><?= generateSortLink($baseUrl, 'last_active', 'Último acesso', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th style="width: 15%;"><?= generateSortLink($baseUrl, 'created_at', 'Criado em', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
                         <th style="width: 15%;">Ações</th>
                     </tr>
                 </thead>

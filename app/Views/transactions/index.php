@@ -1,6 +1,23 @@
 <?= $this->extend('Layouts/default') ?>
 <?= $this->section('content') ?>
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<?php
+require_once APPPATH . 'Helpers\sortingHelper.php';
+
+$currentSortBy = isset($_GET['sort']) ? $_GET['sort'] : ''; 
+$currentSortOrder = isset($_GET['order']) ? strtolower($_GET['order']) : 'asc';
+
+$currentFilters = [];
+if (isset($_GET['desc'])) $currentFilters['desc'] = $_GET['desc'];
+if (isset($_GET['type'])) $currentFilters['type'] = $_GET['type'];
+if (isset($_GET['per_page'])) $currentFilters['per_page'] = $_GET['per_page'];
+if (isset($_GET['start_date'])) $currentFilters['start_date'] = $_GET['start_date'];
+if (isset($_GET['end_date'])) $currentFilters['end_date'] = $_GET['end_date'];
+if (isset($_GET['category_id'])) $currentFilters['category_id'] = $_GET['category_id'];
+if (isset($_GET['situation_id'])) $currentFilters['situation_id'] = $_GET['situation_id'];
+
+$baseUrl = '/lancamentos';
+?>
+<div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Lançamentos Financeiros' ?></h1>
     <a href="<?= base_url('/lancamentos/criar') ?>" class="btn btn-primary shadow-sm"> <i class="fas fa-plus fa-sm text-white-50"></i> Adicionar Lançamento
     </a>
@@ -113,14 +130,14 @@
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Data</th>
-                        <th>Descrição</th>
-                        <th>Categoria</th>
-                        <th>Tipo</th>
-                        <th>Valor</th>
-                        <th>Situação</th>
-                        <th>Forma Pag.</th>
+                        <th><?= generateSortLink($baseUrl, 'id', 'ID', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'date', 'Data', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'description', 'Descrição', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'category_name', 'Categoria', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'type', 'Tipo', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'amount', 'Valor', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'situation_desc', 'Situação', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'pm_desc', 'Forma de pag.', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
                         <th>Ações</th>
                     </tr>
                 </thead>

@@ -1,6 +1,18 @@
 <?= $this->extend('Layouts/default') ?>
 <?= $this->section('content') ?>
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<?php
+require_once APPPATH . 'Helpers\sortingHelper.php';
+
+$currentSortBy = isset($_GET['sort']) ? $_GET['sort'] : '';
+$currentSortOrder = isset($_GET['order']) ? strtolower($_GET['order']) : 'asc';
+
+$currentFilters = [];
+if (isset($_GET['desc'])) $currentFilters['desc'] = $_GET['desc'];
+if (isset($_GET['per_page'])) $currentFilters['per_page'] = $_GET['per_page'];
+
+$baseUrl = '/admin/formas-de-pagamento';
+?>
+<div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Formas de Pagamento' ?></h1>
     <a href="/admin/formas-de-pagamento/criar" class="btn btn-primary shadow-sm">
         <i class="fas fa-plus fa-sm text-white-50"></i> Adicionar Forma de Pagamento
@@ -51,7 +63,7 @@
                 <?= session()->getFlashdata('info') ?>
             </div>
         <?php endif; ?>
-        
+
         <div class="col-sm-12 col-md-6">
             <div id="dataTable_length" class="dataTables_length">
                 <label class="form-label">Mostrar
@@ -73,14 +85,15 @@
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th style="width: 10%;">ID</th>
-                        <th>Descrição</th>
+                        <th style="width: 10%;"><?= generateSortLink($baseUrl, 'id', 'ID', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'description', 'Descrição', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
                         <th style="width: 15%;">Ações</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($payment_methods_list) && is_array($payment_methods_list)): ?>
-                        <?php foreach ($payment_methods_list as $paymentMethod): // Alterado de $pm para $paymentMethod ?>
+                        <?php foreach ($payment_methods_list as $paymentMethod):
+                        ?>
                             <tr>
                                 <td><?= esc($paymentMethod->id) ?></td>
                                 <td><?= esc($paymentMethod->description) ?></td>

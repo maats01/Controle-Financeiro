@@ -101,7 +101,7 @@ if (!function_exists('isActive')) {
                                         Visitante
                                     <?php endif; ?>
                                 </span>
-                                <img class="img-profile rounded-circle" src="https://via.placeholder.com/60/<?= auth()->loggedIn() ? '4e73df' : '777' ?>/fff?text=<?= auth()->loggedIn() ? strtoupper(substr(auth()->user()->username, 0, 1)) : 'V' ?>">
+                                <img class="img-profile rounded-circle" src="<?= base_url('img/undraw_profile.svg') ?>">
                             </a>
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                                 <?php if (auth()->loggedIn()): ?>

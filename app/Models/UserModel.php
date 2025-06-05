@@ -19,7 +19,7 @@ class UserModel extends ShieldUserModel
         ];
     }
 
-    public function getFilteredUsers($username = '', $email = '', $isActive = null)
+    public function getFilteredUsers($username = '', $email = '', $isActive = null, $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
         $builder->select('
@@ -48,6 +48,8 @@ class UserModel extends ShieldUserModel
         {
             $builder->where('users.active', $isActive);
         }
+
+        $builder->orderBy($sortBy, $sortOrder);
 
         return $this;
     }

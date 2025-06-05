@@ -31,13 +31,15 @@ class PaymentMethodModel extends Model
     ];
     protected $skipValidation = false;
 
-    public function getFilteredPaymentMethods($searchString = '')
+    public function getFilteredPaymentMethods($searchString = '', $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
         if ($searchString != '')
         {
             $builder->like('description', $searchString, 'both');
         }
+
+        $builder->orderBy($sortBy, $sortOrder);
 
         return $this;
     }

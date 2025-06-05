@@ -20,6 +20,8 @@ class TransactionsController extends BaseController
         $request = $this->request;
 
         // filters
+        $sortBy = $request->getGet('sort') ?? 'id';
+        $sortOrder = $request->getGet('order') ?? 'DESC';
         $startDate = $request->getGet('start_date') ?? '';
         $endDate = $request->getGet('end_date') ?? '';
         $type = $request->getGet('type') ?? '';
@@ -38,7 +40,7 @@ class TransactionsController extends BaseController
         $perPage = (int) ($request->getGet('per_page') ?? 10);
 
         $data = [
-            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description, $currentUser->id)->paginate($perPage),
+            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description, $currentUser->id, $sortBy, $sortOrder)->paginate($perPage),
             'per_page' => $perPage,
             'selected_situation' => $situation ?? null,
             'selected_category' => $category ?? null,

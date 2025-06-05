@@ -37,7 +37,7 @@ class SituationModel extends Model
     ];
     protected $skipValidation = false;
 
-    public function getFilteredSituations($searchString = '', $type = null)
+    public function getFilteredSituations($searchString = '', $type = null, $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
         if ($searchString != '')
@@ -48,6 +48,8 @@ class SituationModel extends Model
         if (is_integer($type)) {
             $builder->where('type', $type);
         }
+
+        $builder->orderBy($sortBy, $sortOrder);
 
         return $this;
     }

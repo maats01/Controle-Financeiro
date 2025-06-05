@@ -1,6 +1,19 @@
 <?= $this->extend('Layouts/default') ?>
 <?= $this->section('content') ?>
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<?php
+require_once APPPATH . 'Helpers\sortingHelper.php';
+
+$currentSortBy = isset($_GET['sort']) ? $_GET['sort'] : ''; 
+$currentSortOrder = isset($_GET['order']) ? strtolower($_GET['order']) : 'asc';
+
+$currentFilters = [];
+if (isset($_GET['desc'])) $currentFilters['desc'] = $_GET['desc'];
+if (isset($_GET['type'])) $currentFilters['type'] = $_GET['type'];
+if (isset($_GET['per_page'])) $currentFilters['per_page'] = $_GET['per_page'];
+
+$baseUrl = '/admin/situacoes';
+?>
+<div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Situações' ?></h1>
     <a href="/admin/situacoes/criar" class="btn btn-primary shadow-sm">
         <i class="fas fa-plus fa-sm text-white-50"></i> Adicionar Situação
@@ -73,9 +86,9 @@
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th style="width: 10%;">ID</th>
-                        <th>Descrição</th>
-                        <th style="width: 15%;">Tipo</th>
+                        <th style="width: 10%;"><?= generateSortLink($baseUrl, 'id', 'ID', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'description', 'Descrição', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th style="width: 15%;"><?= generateSortLink($baseUrl, 'type', 'Tipo', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
                         <th style="width: 15%;">Ações</th>
                     </tr>
                 </thead>

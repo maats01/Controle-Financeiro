@@ -1,7 +1,7 @@
 <?= $this->extend('Layouts/default') ?>
 <?= $this->section('content') ?>
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
+<div class="d-sm-flex align-items-center justify-content-between mb-4 mt-3">
     <h1 class="h3 mb-0 text-gray-800"><?= isset($title) ? esc($title) : 'Dashboard Financeiro' ?></h1>
     <a href="<?= base_url('/lancamentos/criar') ?>" class="btn btn-primary shadow-sm">
         <i class="fas fa-plus fa-sm text-white-50"></i> Adicionar Lançamento

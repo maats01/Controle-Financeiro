@@ -14,13 +14,15 @@ class UsersController extends BaseController
         $searchForUsername = $request->getGet('username') ?? '';
         $searchForEmail = $request->getGet('email') ?? '';
         $isActive = is_numeric($request->getGet('active')) ? (int) $request->getGet('active') : null;
+        $sortBy = $request->getGet('sort') ?? 'id';
+        $sortOrder = $request->getGet('order') ?? 'DESC';
 
         $perPage = $request->getGet('per_page') ?? 10;
 
         $data = [
             'title' => 'Usuários',
             'per_page' => $perPage,
-            'users_list' => $model->getFilteredUsers($searchForUsername, $searchForEmail, $isActive)->paginate($perPage),
+            'users_list' => $model->getFilteredUsers($searchForUsername, $searchForEmail, $isActive, $sortBy, $sortOrder)->paginate($perPage),
             'pager' => $model->pager,
         ];
 

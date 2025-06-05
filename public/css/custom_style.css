@@ -202,3 +202,9 @@ body {
     cursor: pointer !important;
     z-index: 10;
 }
+
+.img-profile {
+  width: 2.25rem;
+  height: 2.25rem;
+  object-fit: contain;
+}

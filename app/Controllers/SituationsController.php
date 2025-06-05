@@ -16,13 +16,15 @@ class SituationsController extends BaseController
         $perPage = (int) ($request->getGet('per_page') ?? 10);
         $searchString = $request->getGet('desc') ?? '';
         $type = is_numeric($request->getGet('type')) ? (int) $request->getGet('type') : null;
+        $sortBy = $request->getGet('sort') ?? 'id';
+        $sortOrder = $request->getGet('order') ?? 'DESC';
 
         $data = [
             'title' => 'Situações',
-            'situations_list' => $model->getFilteredSituations($searchString, $type)->paginate($perPage),
+            'situations_list' => $model->getFilteredSituations($searchString, $type, $sortBy, $sortOrder)->paginate($perPage),
             'per_page' => $perPage,
             'pager' => $model->pager,
-        ]; 
+        ];
 
         return view('situations/index', $data);
     }
@@ -44,7 +46,7 @@ class SituationsController extends BaseController
             'type' => 'required|in_list[0,1]',
         ];
 
-        if(! $this -> validate($rules)){
+        if (! $this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -52,10 +54,10 @@ class SituationsController extends BaseController
         $situation->fill($this->request->getPost());
         $situation->type = (int) $this->request->getPost('type');
 
-        if($model->save($situation)){
+        if ($model->save($situation)) {
             session()->setFlashdata('success', 'Situação adicionada com sucesso!');
             return redirect()->to('admin/situacoes');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao adicionar situação. Tente novamente.');
             return redirect()->back()->withInput();
         }
@@ -66,7 +68,7 @@ class SituationsController extends BaseController
         $model = model(SituationModel::class);
         $situation = $model->find($id);
 
-        if(empty($situation)){
+        if (empty($situation)) {
             session()->setFlashdata('error', 'Situação não encontrada.');
             return redirect()->to('admin/situacoes');
         }
@@ -77,7 +79,6 @@ class SituationsController extends BaseController
         ];
 
         return view('situations/edit', $data);
-
     }
 
     public function editPost()
@@ -88,40 +89,39 @@ class SituationsController extends BaseController
 
         $situation = $model->find($postData['id']);
 
-        if(empty($situation)){
+        if (empty($situation)) {
             session()->setFlashdata('error', 'Situação não encontrada para atualização.');
             return redirect()->to('admin/situacoes');
         }
 
         $situation->fill($postData);
 
-        if(!$situation->haschanged()){
+        if (!$situation->haschanged()) {
             session()->setFlashdata('info', 'Nenhuma alteração detectada para a situação');
             return redirect()->to('admin/situacoes');
         }
 
-        if($model->save($situation)){
+        if ($model->save($situation)) {
             session()->setFlashdata('success', 'Situação atualizada com sucesso!');
             return redirect()->to('admin/situacoes');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao atualizar a situação. Verifique os dados e tente novamente.');
             return redirect()->to('admin/situacoes');
         }
-
     }
 
     public function delete(int $id)
     {
         $model = model(SituationModel::class);
 
-        if(empty($id)){
+        if (empty($id)) {
             session()->setFlashdata('error', 'Situação não encontrada para exclusão.');
             return redirect()->to('admin/situacoes');
         }
 
-        if($model->delete($id)){
+        if ($model->delete($id)) {
             session()->setFlashdata('success', 'Situação excluída com sucesso!');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao excluir situação. Tente novamente mais tarde!');
         }
 

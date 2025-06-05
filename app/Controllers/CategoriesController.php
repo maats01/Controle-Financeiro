@@ -15,12 +15,14 @@ class CategoriesController extends BaseController
         $perPage = (int) ($request->getGet('per_page') ?? 10);
         $searchString = $request->getGet('desc') ?? '';
         $type = is_numeric($request->getGet('type')) ? (int) $request->getGet('type') : null;
+        $sortBy = $request->getGet('sort') ?? 'id';
+        $sortOrder = $request->getGet('order') ?? 'DESC';
 
         $data = [
-            'categories_list' => $model->getFilteredCategories($searchString, $type)->paginate($perPage),
+            'categories_list' => $model->getFilteredCategories($searchString, $type, $sortBy, $sortOrder)->paginate($perPage),
             'per_page' => $perPage,
             'pager' => $model->pager,
-            'title' => 'Categorias' 
+            'title' => 'Categorias',
         ];
 
         return view('categories/index', $data);
