@@ -46,6 +46,12 @@
                 <?= session()->getFlashdata('error') ?>
             </div>
         <?php endif; ?>
+        <?php if (session()->getFlashdata('info')): ?>
+            <div class="alert alert-info">
+                <?= session()->getFlashdata('info') ?>
+            </div>
+        <?php endif; ?>
+        
         <div class="col-sm-12 col-md-6">
             <div id="dataTable_length" class="dataTables_length">
                 <label class="form-label">Mostrar

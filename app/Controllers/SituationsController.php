@@ -63,7 +63,51 @@ class SituationsController extends BaseController
 
     public function edit(int $id)
     {
-        // TODO
+        $model = model(SituationModel::class);
+        $situation = $model->find($id);
+
+        if(empty($situation)){
+            session()->setFlashdata('error', 'Situação não encontrada.');
+            return redirect()->to('admin/situacoes');
+        }
+
+        $data = [
+            'title' => 'Editar Situação',
+            'situation' => $situation
+        ];
+
+        return view('situations/edit', $data);
+
+    }
+
+    public function editPost()
+    {
+        $model = model(SituationModel::class);
+
+        $postData = $this->request->getPost();
+
+        $situation = $model->find($postData['id']);
+
+        if(empty($situation)){
+            session()->setFlashdata('error', 'Situação não encontrada para atualização.');
+            return redirect()->to('admin/situacoes');
+        }
+
+        $situation->fill($postData);
+
+        if(!$situation->haschanged()){
+            session()->setFlashdata('info', 'Nenhuma alteração detectada para a situação');
+            return redirect()->to('admin/situacoes');
+        }
+
+        if($model->save($situation)){
+            session()->setFlashdata('success', 'Situação atualizada com sucesso!');
+            return redirect()->to('admin/situacoes');
+        }else{
+            session()->setFlashdata('error', 'Erro ao atualizar a situação. Verifique os dados e tente novamente.');
+            return redirect()->to('admin/situacoes');
+        }
+
     }
 
     public function delete(int $id)

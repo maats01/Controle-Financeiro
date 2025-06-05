@@ -22,11 +22,6 @@
                 <?= session()->getFlashdata('error') ?>
             </div>
         <?php endif; ?>
-        <?php if (session()->getFlashdata('info')): ?>
-            <div class="alert alert-info">
-                <?= session()->getFlashdata('info') ?>
-            </div>
-        <?php endif; ?>
 
         <?php if (isset($errors) && is_array($errors) && !empty($errors)): ?>
             <div class="alert alert-danger">

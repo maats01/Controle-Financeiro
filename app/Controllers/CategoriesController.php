@@ -71,10 +71,11 @@ class CategoriesController extends BaseController
         }
 
         $data = [
-            'title' => 'Editar categoria'
+            'title' => 'Editar Categoria',
+            'category' => $category
         ];
 
-        return view('categorias/edit', $data);
+        return view('categories/edit', $data);
 
     }
 
