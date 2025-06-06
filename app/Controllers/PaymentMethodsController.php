@@ -15,7 +15,7 @@ class PaymentMethodsController extends BaseController
         $perPage = (int) ($request->getGet('per_page') ?? 10);
         $searchString = $request->getGet('desc') ?? '';
         $sortBy = $request->getGet('sort') ?? 'id';
-        $sortOrder = $request->getGet('order') ?? 'DESC';
+        $sortOrder = $request->getGet('order') ?? 'ASC';
 
         $data = [
             'title' => 'Formas de Pagamento',

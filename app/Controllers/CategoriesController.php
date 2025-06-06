@@ -16,7 +16,7 @@ class CategoriesController extends BaseController
         $searchString = $request->getGet('desc') ?? '';
         $type = is_numeric($request->getGet('type')) ? (int) $request->getGet('type') : null;
         $sortBy = $request->getGet('sort') ?? 'id';
-        $sortOrder = $request->getGet('order') ?? 'DESC';
+        $sortOrder = $request->getGet('order') ?? 'ASC';
 
         $data = [
             'categories_list' => $model->getFilteredCategories($searchString, $type, $sortBy, $sortOrder)->paginate($perPage),

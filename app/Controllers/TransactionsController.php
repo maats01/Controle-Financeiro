@@ -6,22 +6,31 @@ use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\SituationModel;
 use App\Models\TransactionModel;
+use App\Entities\Transaction;
 use CodeIgniter\I18n\Time;
 
 class TransactionsController extends BaseController
 {
+    protected $categoryModel;
+    protected $situationModel;
+
+    public function __construct()
+    {
+        $this->categoryModel = model(CategoryModel::class);
+        $this->situationModel = model(SituationModel::class);
+    }
+
     public function index()
     {
         $model = model(TransactionModel::class);
         $currentUser = auth()->user();
-
         $categoryModel = model(CategoryModel::class);
         $situationModel = model(SituationModel::class);
         $request = $this->request;
 
         // filters
         $sortBy = $request->getGet('sort') ?? 'id';
-        $sortOrder = $request->getGet('order') ?? 'DESC';
+        $sortOrder = $request->getGet('order') ?? 'ASC';
         $startDate = $request->getGet('start_date') ?? '';
         $endDate = $request->getGet('end_date') ?? '';
         $type = $request->getGet('type') ?? '';
@@ -75,7 +84,46 @@ class TransactionsController extends BaseController
 
     public function create()
     {
-        // TODO
+        $data = [
+            'title' => 'Criar Lançamento',
+            'categories' => $this->categoryModel->findAll(),
+            'situations' => $this->situationModel->findAll(),
+        ];
+        
+        return view('transactions/create', $data);
+
+    }
+
+    public function createPost()
+    {
+        $model = model(TransactionModel::class);
+        $currentUser = auth()->user();
+
+        $rules = [
+            'description' => 'required|min_length[3]|max_length[255]',
+            'value' => 'required|numeric|greater_than[0]',
+            'type' => 'required|in_list[0,1]',
+            'category_id' => 'required|is_natural_no_zero|is_not_unique[categories.id]',
+            'situation_id' => 'required|is_natural_no_zero|is_not_unique[situations.id]',
+            'due_date' => 'required|valid_date', 
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $transaction = new Transaction();
+        $transaction->fill($this->request->getPost());
+        $transaction->user_id = $currentUser->id;
+        $transaction->value = (float) str_replace(',', '.', $this->request->getPost('value'));
+
+        if($model->save($transaction)){
+            session()->setFlashdata('success', 'Lançamento adicionado com sucesso!');
+            return redirect()->to('/lancamentos');
+        }else{
+            session()->setFlashdata('error', 'Erro ao adicionar lançamento. Verifique os dados e tente novamente');
+            return redirect()->back()->withInput()->with('errors', $model->errors());
+        }
     }
 
     public function edit(int $id)
