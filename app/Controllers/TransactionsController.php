@@ -131,6 +131,11 @@ class TransactionsController extends BaseController
         // TODO
     }
 
+    public function editPost()
+    {
+        
+    }
+
     public function delete(int $id)
     {
         // TODO
