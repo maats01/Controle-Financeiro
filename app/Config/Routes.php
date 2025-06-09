@@ -19,6 +19,7 @@ $routes->group('api', static function ($routes)
 {
     $routes->get('categorias', [ApiController::class, 'getCategories']);
     $routes->get('situacoes', [ApiController::class, 'getSituations']);
+    $routes->get('formas-de-pagamento', [ApiController::class, 'getPaymentMethods']);
 });
 
 // Transactions routes

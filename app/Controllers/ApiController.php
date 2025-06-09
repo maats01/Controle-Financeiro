@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
+use App\Models\PaymentMethodModel;
 use App\Models\SituationModel;
 use CodeIgniter\API\ResponseTrait;
 
@@ -31,6 +32,23 @@ class ApiController extends BaseController
     public function getSituations()
     {
         $model = model(SituationModel::class);
+        $searchString = $this->request->getGet('search');
+
+        if ($searchString)
+        {
+            $data = $model->like('description', $searchString, 'both')->findAll();
+        }
+        else
+        {
+            $data = $model->findAll();
+        }
+
+        return $this->respond($data);
+    }
+
+    public function getPaymentMethods()
+    {
+        $model = model(PaymentMethodModel::class);
         $searchString = $this->request->getGet('search');
 
         if ($searchString)

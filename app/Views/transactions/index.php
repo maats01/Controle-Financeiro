@@ -3,7 +3,7 @@
 <?php
 require_once APPPATH . 'Helpers\sortingHelper.php';
 
-$currentSortBy = isset($_GET['sort']) ? $_GET['sort'] : ''; 
+$currentSortBy = isset($_GET['sort']) ? $_GET['sort'] : '';
 $currentSortOrder = isset($_GET['order']) ? strtolower($_GET['order']) : 'asc';
 
 $currentFilters = [];
@@ -49,8 +49,8 @@ $baseUrl = '/lancamentos';
                         </select>
                     </div>
                     <div class="form-group col-md-3">
-                        <label for="categoria_id">Categoria</label>
-                        <select id="categoria_id" name="category_id" class="form-control form-control-sm" style="width: 100%;">
+                        <label for="category_id">Categoria</label>
+                        <select id="category_id" name="category_id" class="form-control form-control-sm" style="width: 100%;">
                             <?php if (isset($selected_category)): ?>
                                 <option value="<?= esc($selected_category->id, 'attr') ?>" selected>
                                     <?= esc($selected_category->name) ?>
@@ -61,8 +61,8 @@ $baseUrl = '/lancamentos';
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
-                        <label for="situacao_id">Situação</label>
-                        <select id="situacao_id" name="situation_id" class="form-control form-control-sm" style="width: 100%;">
+                        <label for="situation_id">Situação</label>
+                        <select id="situation_id" name="situation_id" class="form-control form-control-sm" style="width: 100%;">
                             <?php if (isset($selected_situation)): ?>
                                 <option value="<?= esc($selected_situation->id, 'attr') ?>" selected>
                                     <?= esc($selected_situation->description) ?>
@@ -70,15 +70,14 @@ $baseUrl = '/lancamentos';
                             <?php endif; ?>
                         </select>
                     </div>
-                    <div class="form-group col-md-3"> <label for="payment_method_id">Forma de Pagamento</label>
+                    <div class="form-group col-md-3">
+                        <label for="payment_method_id">Forma de Pagamento</label>
                         <select id="payment_method_id" name="payment_method_id" class="form-control form-control-sm" style="width: 100%;">
                             <option value="">Todas as formas de pagamento</option>
-                            <?php if (isset($payment_methods) && is_array($payment_methods)): ?>
-                                <?php foreach ($payment_methods as $pm): ?>
-                                    <option value="<?= esc($pm->id) ?>" <?= (isset($_GET['payment_method_id']) && $_GET['payment_method_id'] == $pm->id) ? 'selected' : '' ?>>
-                                        <?= esc($pm->description) ?>
-                                    </option>
-                                <?php endforeach; ?>
+                            <?php if (isset($selected_payment_method)): ?>
+                                <option value="<?= esc($selected_payment_method->id, 'attr') ?>" selected>
+                                    <?= esc($selected_payment_method->description) ?>
+                                </option>
                             <?php endif; ?>
                         </select>
                     </div>
@@ -143,14 +142,14 @@ $baseUrl = '/lancamentos';
             <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th><?= generateSortLink($baseUrl, 'id', 'ID', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'date', 'Data', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'description', 'Descrição', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'category_name', 'Categoria', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'type', 'Tipo', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'amount', 'Valor', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'situation_desc', 'Situação', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
-                        <th><?= generateSortLink($baseUrl, 'pm_desc', 'Forma de pag.', $currentSortBy, $currentSortOrder, $currentFilters)?></th>
+                        <th><?= generateSortLink($baseUrl, 'id', 'ID', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'date', 'Data', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'description', 'Descrição', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'category_name', 'Categoria', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'type', 'Tipo', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'amount', 'Valor', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'situation_desc', 'Situação', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
+                        <th><?= generateSortLink($baseUrl, 'pm_desc', 'Forma de pag.', $currentSortBy, $currentSortOrder, $currentFilters) ?></th>
                         <th>Ações</th>
                     </tr>
                 </thead>

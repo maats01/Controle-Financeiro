@@ -28,11 +28,15 @@ $(document).ready(function() {
         language: "pt-BR"
     });
 
-    $('#categoria_id').select2(
+    $('#category_id').select2(
         select2AjaxConfig('Todas as categorias', '/api/categorias', 'name')
     );
 
-    $('#situacao_id').select2(
+    $('#situation_id').select2(
         select2AjaxConfig('Todas as situações', '/api/situacoes', 'description')
+    );
+
+    $('#payment_method_id').select2(
+        select2AjaxConfig('Todas as as formas de pagamento', '/api/formas-de-pagamento', 'description')
     );
 });

@@ -62,7 +62,6 @@ class TransactionsController extends BaseController
             'per_page' => $perPage,
             'selected_situation' => $situation ?? null,
             'selected_category' => $category ?? null,
-            'payment_methods' => $this->paymentMethodModel->findAll(),
             'selected_payment_method' => $paymentMethod ?? null,
             'pager' => $model->pager,
             'title' => 'Lançamentos',
