@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\CategoryModel;
 use App\Models\SituationModel;
+use App\Models\PaymentMethodModel;
 use App\Models\TransactionModel;
 use App\Entities\Transaction;
 use CodeIgniter\I18n\Time;
@@ -13,11 +14,13 @@ class TransactionsController extends BaseController
 {
     protected $categoryModel;
     protected $situationModel;
+    protected $paymentMethodModel;
 
     public function __construct()
     {
         $this->categoryModel = model(CategoryModel::class);
         $this->situationModel = model(SituationModel::class);
+        $this->paymentMethodModel = model(PaymentMethodModel::class);
     }
 
     public function index()
@@ -36,6 +39,8 @@ class TransactionsController extends BaseController
         $type = $request->getGet('type') ?? '';
         $description = $request->getGet('desc') ?? '';
         $categoryId = $request->getGet('category_id') ?? '';
+        $paymentMethodId = $request->getGet('payment_method_id') ?? '';
+
         if (isset($categoryId) && is_numeric($categoryId))
         {
             $category = $categoryModel->find((int) $categoryId);
@@ -45,14 +50,20 @@ class TransactionsController extends BaseController
         {
             $situation = $situationModel->find((int) $situationId);
         }
+        if (isset($paymentMethodId) && is_numeric($paymentMethodId))
+        {
+            $paymentMethod = $this->paymentMethodModel->find((int) $paymentMethodId);
+        }
 
         $perPage = (int) ($request->getGet('per_page') ?? 10);
 
         $data = [
-            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description, $currentUser->id, $sortBy, $sortOrder)->paginate($perPage),
+            'transactions_list' => $model->getFilteredTransactionsWithDetails($startDate, $endDate, $type, $categoryId, $situationId, $description, $paymentMethodId, $currentUser->id, $sortBy, $sortOrder)->paginate($perPage),
             'per_page' => $perPage,
             'selected_situation' => $situation ?? null,
             'selected_category' => $category ?? null,
+            'payment_methods' => $this->paymentMethodModel->findAll(),
+            'selected_payment_method' => $paymentMethod ?? null,
             'pager' => $model->pager,
             'title' => 'Lançamentos',
         ];

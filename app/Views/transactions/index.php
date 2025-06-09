@@ -14,6 +14,7 @@ if (isset($_GET['start_date'])) $currentFilters['start_date'] = $_GET['start_dat
 if (isset($_GET['end_date'])) $currentFilters['end_date'] = $_GET['end_date'];
 if (isset($_GET['category_id'])) $currentFilters['category_id'] = $_GET['category_id'];
 if (isset($_GET['situation_id'])) $currentFilters['situation_id'] = $_GET['situation_id'];
+if (isset($_GET['payment_method_id'])) $currentFilters['payment_method_id'] = $_GET['payment_method_id'];
 
 $baseUrl = '/lancamentos';
 ?>
@@ -69,7 +70,19 @@ $baseUrl = '/lancamentos';
                             <?php endif; ?>
                         </select>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-3"> <label for="payment_method_id">Forma de Pagamento</label>
+                        <select id="payment_method_id" name="payment_method_id" class="form-control form-control-sm" style="width: 100%;">
+                            <option value="">Todas as formas de pagamento</option>
+                            <?php if (isset($payment_methods) && is_array($payment_methods)): ?>
+                                <?php foreach ($payment_methods as $pm): ?>
+                                    <option value="<?= esc($pm->id) ?>" <?= (isset($_GET['payment_method_id']) && $_GET['payment_method_id'] == $pm->id) ? 'selected' : '' ?>>
+                                        <?= esc($pm->description) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-3">
                         <label for="descricao">Descrição</label>
                         <input type="text" class="form-control form-control-sm" id="descricao" name="desc" placeholder="Buscar por palavra-chave..." value="<?= isset($_GET['desc']) ? esc($_GET['desc'], 'attr') : '' ?>">
                     </div>
