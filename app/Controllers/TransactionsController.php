@@ -170,7 +170,7 @@ class TransactionsController extends BaseController
 
         if(!$transaction->hasChanged()){
             session()->setFlashdata('info', 'Nenhuma alteração detectada para o lançamento.');
-            return redirect()->to('/lancamentos');
+            return redirect()->to('lancamentos');
         }
 
         if($model->save($transaction)){
@@ -183,7 +183,26 @@ class TransactionsController extends BaseController
     }
 
     public function delete(int $id)
-    {
-        // TODO
+    {  
+        $model = model(TransactionModel::class);
+        $currentUser = auth()->user();
+
+        $transaction = $model->where('id', $id)
+                             ->where('user_id', $currentUser->id)
+                             ->first();
+
+        if(empty($transaction)){
+            session()->setFlashdata('error','Lançamento não encontrado ou você não tem permissão para excluí-lo.');
+            return redirect()->to('/lancamentos');
+        }
+        
+        if($model->delete($id)){
+            session()->setFlashdata('success', 'Lançamento excluído com sucesso!');
+        }else{
+            session()->setFlashdata('error', 'Erro ao excluir lançamento. Tente novamente mais tarde!');
+        }
+
+        return redirect()->to('/lancamentos');
+    
     }
 }

@@ -177,7 +177,14 @@ $baseUrl = '/lancamentos';
                                 <td>
                                     <a href="<?= base_url('/lancamentos/editar/' . esc($transaction->id, 'url')) ?>" class="btn btn-sm btn-info" title="Editar"> <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="<?= base_url('/lancamentos/deletar/' . esc($transaction->id, 'url')) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este lançamento?');"> <i class="fas fa-trash"></i>
+                                    <a href="#" class="btn btn-sm btn-danger" title="Excluir"
+                                        data-toggle="modal"
+                                        data-target="#deleteModal"
+                                        data-id="<?= esc($transaction->id) ?>"
+                                        data-name="<?= esc($transaction->description) ?>"
+                                        data-controller="lancamentos"
+                                        data-base="">
+                                        <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -198,8 +205,32 @@ $baseUrl = '/lancamentos';
         <?php endif; ?>
     </div>
 </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir o lançamento <strong id="itemNameToDelete"></strong>?
+                <p class="text-danger mt-2">Esta ação não pode ser desfeita e pode afetar saldos e relatórios.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" action="" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
 <script src="<?= base_url('js/customSelects.js') ?>"></script>
+<script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <?= $this->endSection() ?>
