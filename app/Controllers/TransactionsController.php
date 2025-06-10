@@ -33,7 +33,7 @@ class TransactionsController extends BaseController
 
         // filters
         $sortBy = $request->getGet('sort') ?? 'id';
-        $sortOrder = $request->getGet('order') ?? 'ASC';
+        $sortOrder = $request->getGet('order') ?? 'DESC';
         $startDate = $request->getGet('start_date') ?? '';
         $endDate = $request->getGet('end_date') ?? '';
         $type = $request->getGet('type') ?? '';
@@ -98,6 +98,7 @@ class TransactionsController extends BaseController
             'title' => 'Criar Lançamento',
             'categories' => $this->categoryModel->findAll(),
             'situations' => $this->situationModel->findAll(),
+            'payment_methods' => $this->paymentMethodModel->findAll(),
         ];
         
         return view('transactions/create', $data);
@@ -107,25 +108,11 @@ class TransactionsController extends BaseController
     public function createPost()
     {
         $model = model(TransactionModel::class);
-        $currentUser = auth()->user();
-
-        $rules = [
-            'description' => 'required|min_length[3]|max_length[255]',
-            'value' => 'required|numeric|greater_than[0]',
-            'type' => 'required|in_list[0,1]',
-            'category_id' => 'required|is_natural_no_zero|is_not_unique[categories.id]',
-            'situation_id' => 'required|is_natural_no_zero|is_not_unique[situations.id]',
-            'due_date' => 'required|valid_date', 
-        ];
-
-        if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-        }
-
+        $currentUser = auth()->user();  
         $transaction = new Transaction();
         $transaction->fill($this->request->getPost());
         $transaction->user_id = $currentUser->id;
-        $transaction->value = (float) str_replace(',', '.', $this->request->getPost('value'));
+        $transaction->amount = (float) str_replace(',', '.', $this->request->getPost('amount'));
 
         if($model->save($transaction)){
             session()->setFlashdata('success', 'Lançamento adicionado com sucesso!');

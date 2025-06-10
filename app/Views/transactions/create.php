@@ -33,11 +33,6 @@
             </div>
         <?php endif; ?>
 
-        <!--
-            ATENÇÃO: A ação do formulário foi corrigida para '/lancamentos/salvar'
-            Isso corresponde à rota POST definida em app/Config/Routes.php
-            para o método createPost do TransactionsController.
-        -->
         <form action="/lancamentos/salvar" method="post">
             <?= csrf_field() ?>
             <div class="form-row">
@@ -52,10 +47,10 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="value">Valor:</label>
-                    <input type="number" class="form-control" id="value" name="value" value="<?= old('value') ?>" step="0.01" placeholder="Ex: 1500.50" required min="0.01">
-                    <?php if (isset($errors['value'])): ?>
-                        <small class="text-danger"><?= esc($errors['value']) ?></small>
+                    <label for="amount">Valor:</label>
+                    <input type="number" class="form-control" id="amount" name="amount" value="<?= old('amount') ?>" step="0.01" placeholder="Ex: 1500.50" required min="0.01">
+                    <?php if (isset($errors['amount'])): ?>
+                        <small class="text-danger"><?= esc($errors['amount']) ?></small>
                     <?php endif; ?>
                 </div>
                 <div class="form-group col-md-6">
@@ -81,13 +76,14 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="category_id">Categoria:</label>
-                    <select id="category_id" name="category_id" class="form-control" required>
+                    <select id="category_id" name="category_id" class="form-control" required style="width: 100%;">
                         <option value="">Selecione uma categoria</option>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= esc($category->id) ?>" <?= old('category_id') == $category->id ? 'selected' : '' ?>>
-                                <?= esc($category->name) ?>
+                        <?php if (old('category_id')):?>
+
+                             <option value="<?= esc(old('category_id')) ?>" selected>
+                                <?= esc($categories->where('id', old('category_id'))->first()->name ?? 'Categoria Selecionada') ?>
                             </option>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
                     <?php if (isset($errors['category_id'])): ?>
                         <small class="text-danger"><?= esc($errors['category_id']) ?></small>
@@ -95,13 +91,13 @@
                 </div>
                 <div class="form-group col-md-6">
                     <label for="situation_id">Situação:</label>
-                    <select id="situation_id" name="situation_id" class="form-control" required>
+                    <select id="situation_id" name="situation_id" class="form-control" required style="width: 100%;">
                         <option value="">Selecione uma situação</option>
-                        <?php foreach ($situations as $situation): ?>
-                            <option value="<?= esc($situation->id) ?>" <?= old('situation_id') == $situation->id ? 'selected' : '' ?>>
-                                <?= esc($situation->description) ?>
+                        <?php if (old('situation_id')): ?>
+                             <option value="<?= esc(old('situation_id')) ?>" selected>
+                                <?= esc($situations->where('id', old('situation_id'))->first()->description ?? 'Situação Selecionada') ?>
                             </option>
-                        <?php endforeach; ?>
+                        <?php endif; ?>
                     </select>
                     <?php if (isset($errors['situation_id'])): ?>
                         <small class="text-danger"><?= esc($errors['situation_id']) ?></small>
@@ -111,10 +107,24 @@
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="due_date">Data de Lançamento:</label>
-                    <input type="date" class="form-control" id="due_date" name="due_date" value="<?= old('due_date') ?>" required>
-                    <?php if (isset($errors['due_date'])): ?>
-                        <small class="text-danger"><?= esc($errors['due_date']) ?></small>
+                    <label for="payment_method_id">Forma de Pagamento:</label>
+                    <select id="payment_method_id" name="payment_method_id" class="form-control" required style="width: 100%;">
+                        <option value="">Selecione uma forma de pagamento</option>
+                        <?php if (old('payment_method_id')): ?>
+                            <option value="<?= esc(old('payment_method_id')) ?>" selected>
+                                <?= esc($payment_methods->where('id', old('payment_method_id'))->first()->description ?? 'Forma de Pagamento Selecionada') ?>
+                            </option>
+                        <?php endif; ?>
+                    </select>
+                    <?php if (isset($errors['payment_method_id'])): ?>
+                        <small class="text-danger"><?= esc($errors['payment_method_id']) ?></small>
+                    <?php endif; ?>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="date">Data de Lançamento:</label>
+                    <input type="date" class="form-control" id="date" name="date" value="<?= old('date') ?>" required>
+                    <?php if (isset($errors['date'])): ?>
+                        <small class="text-danger"><?= esc($errors['date']) ?></small>
                     <?php endif; ?>
                 </div>
             </div>
@@ -126,4 +136,9 @@
         </form>
     </div>
 </div>
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="<?= base_url('js/customSelects.js') ?>"></script>
 <?= $this->endSection() ?>

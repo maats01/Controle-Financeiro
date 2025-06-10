@@ -25,6 +25,51 @@ class TransactionModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
+        protected $validationRules = [
+        'description'       => 'required|min_length[3]|max_length[255]',
+        'amount'            => 'required|numeric|greater_than[0]',
+        'type'              => 'required|in_list[0,1]',
+        'date'              => 'required|valid_date',
+        'category_id'       => 'required|is_natural_no_zero',
+        'situation_id'      => 'required|is_natural_no_zero',
+        'payment_method_id' => 'required|is_natural_no_zero',
+    ];
+
+    protected $validationMessages = [
+        'description' => [
+            'required'   => 'A descrição do lançamento é obrigatória.',
+            'min_length' => 'A descrição deve ter pelo menos 3 caracteres.',
+            'max_length' => 'A descrição não pode exceder 255 caracteres.',
+        ],
+        'amount' => [
+            'required'      => 'O valor do lançamento é obrigatório.',
+            'numeric'       => 'O valor deve ser um número válido.',
+            'greater_than'  => 'O valor deve ser maior que zero.',
+        ],
+        'type' => [
+            'required' => 'O tipo do lançamento (Despesa/Receita) é obrigatório.',
+            'in_list'  => 'O tipo selecionado é inválido. Escolha Despesa ou Receita.',
+        ],
+        'date' => [
+            'required'   => 'A data do lançamento é obrigatória.',
+            'valid_date' => 'A data informada é inválida.',
+        ],
+        'category_id' => [
+            'required'         => 'A categoria é obrigatória.',
+            'is_natural_no_zero' => 'A categoria selecionada é inválida.',
+        ],
+        'situation_id' => [
+            'required'         => 'A situação é obrigatória.',
+            'is_natural_no_zero' => 'A situação selecionada é inválida.',
+        ],
+        'payment_method_id' => [
+            'required'         => 'A forma de pagamento é obrigatória.',
+            'is_natural_no_zero' => 'A forma de pagamento selecionada é inválida.',
+        ],
+    ];
+
+    protected $skipValidation = false; // Garante que a validação seja executada automaticamente no save()
+
     public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString, $paymentMethodId, $userId, $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
