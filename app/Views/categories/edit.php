@@ -57,8 +57,8 @@
                     <label for="type">Tipo da Categoria:</label>
                     <select class="form-control" id="type" name="type" required>
                         <option value="">Selecione o Tipo</option>
-                        <option value="0" <?= old('type', $category->type ?? null) === 0 ? 'selected' : '' ?>>Despesa</option>
-                        <option value="1" <?= old('type', $category->type ?? null) === 1 ? 'selected' : '' ?>>Receita</option>
+                        <option value="0" <?= old('type', $category->type ?? null) == 0 ? 'selected' : '' ?>>Despesa</option>
+                        <option value="1" <?= old('type', $category->type ?? null) == 1 ? 'selected' : '' ?>>Receita</option>
                     </select>
                     <?php if (isset($errors['type'])): ?>
                         <small class="text-danger"><?= esc($errors['type']) ?></small>
