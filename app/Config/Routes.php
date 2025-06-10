@@ -30,7 +30,8 @@ $routes->group('lancamentos', static function ($routes)
 {
     $routes->get('criar', [TransactionsController::class, 'create']);
     $routes->post('salvar', [TransactionsController::class, 'createPost']);
-    $routes->post('editar/(:num)', [TransactionsController::class, 'edit/$1']);
+    $routes->get('editar/(:num)', [TransactionsController::class, 'edit/$1']);
+    $routes->post('atualizar', [TransactionsController::class, 'editPost']);
     $routes->post('deletar/(:num)', [TransactionsController::class, 'delete/$1']);
 });
 

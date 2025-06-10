@@ -125,12 +125,61 @@ class TransactionsController extends BaseController
 
     public function edit(int $id)
     {
-        // TODO
-    }
+        $model = model(TransactionModel::class);
+        $currentUser = auth()->user();
 
+        // Busca a transação pelo ID E pelo user_id para garantir permissão
+        $transaction = $model->where('id', $id)
+                             ->where('user_id', $currentUser->id)
+                             ->first();
+
+        if(empty($transaction)){
+            session()->setFlashdata('error', 'Lançamento não encontrado ou você não tem permissão para editá-lo.');
+            return redirect()->to('/lancamentos');
+        }
+        $data = [
+            'title' => 'Editar Lançamento',
+            'transaction' => $transaction,
+            'categories' => $this->categoryModel->findAll(),
+            'situations' => $this->situationModel->findAll(),
+            'payment_methods' => $this->paymentMethodModel->findAll(),
+        ];
+
+        return view('transactions/edit', $data);
+
+    }    
+    
     public function editPost()
     {
-        
+        $model = model(TransactionModel::class);
+        $currentUser = auth()->user();
+        $postData = $this->request->getPost();
+
+        $transaction = $model->where('id', $postData['id'])
+                             ->where('user_id', $currentUser->id)
+                             ->first();
+
+        if(empty($transaction)){
+            session()->setFlashdata('error', 'Lançamento não encontrado para atualização ou você não tem permissão.');
+            return redirect()->to('/lancamentos');
+        }
+
+        $transaction->fill($postData);
+
+        $transaction->amount = (float) str_replace(',', '.', $this->request->getPost('amount'));
+
+        if(!$transaction->hasChanged()){
+            session()->setFlashdata('info', 'Nenhuma alteração detectada para o lançamento.');
+            return redirect()->to('/lancamentos');
+        }
+
+        if($model->save($transaction)){
+            session()->setFlashdata('success', 'Lançamento atualizado com sucesso!');
+            return redirect()->to('/lancamentos');
+        }else{
+            session()->setFlashdata('error', 'Erro ao atualizar o lançamento. Verifique os dados e tente novamente.');
+            return redirect()->back()->withInput()->with('errors', $model->errors());
+        }   
     }
 
     public function delete(int $id)
