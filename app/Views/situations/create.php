@@ -18,7 +18,6 @@
             </div>
         <?php endif; ?>
         
-        <!-- Mensagens de erro genéricas ou do Model -->
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger">
                 <?= session()->getFlashdata('error') ?>

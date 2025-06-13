@@ -108,7 +108,8 @@ class TransactionsController extends BaseController
     public function createPost()
     {
         $model = model(TransactionModel::class);
-        $currentUser = auth()->user();  
+        $currentUser = auth()->user();
+          
         $transaction = new Transaction();
         $transaction->fill($this->request->getPost());
         $transaction->user_id = $currentUser->id;
