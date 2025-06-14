@@ -27,8 +27,6 @@ class TransactionsController extends BaseController
     {
         $model = model(TransactionModel::class);
         $currentUser = auth()->user();
-        $categoryModel = model(CategoryModel::class);
-        $situationModel = model(SituationModel::class);
         $request = $this->request;
 
         // filters
@@ -43,12 +41,12 @@ class TransactionsController extends BaseController
 
         if (isset($categoryId) && is_numeric($categoryId))
         {
-            $category = $categoryModel->find((int) $categoryId);
+            $category = $this->categoryModel->find((int) $categoryId);
         }
         $situationId = $request->getGet('situation_id') ?? '';
         if (isset($situationId) && is_numeric($situationId))
         {
-            $situation = $situationModel->find((int) $situationId);
+            $situation = $this->situationModel->find((int) $situationId);
         }
         if (isset($paymentMethodId) && is_numeric($paymentMethodId))
         {
