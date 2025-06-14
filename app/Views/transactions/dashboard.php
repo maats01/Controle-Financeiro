@@ -225,8 +225,9 @@
                     ticks: {
                         callback: function(value, index, ticks) {
                             return 'R$ ' + value;
-                        }
-                    }
+                        },
+                    },
+                    beginAtZero: true,
                 }
             },
             plugins: {
