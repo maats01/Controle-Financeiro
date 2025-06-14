@@ -161,6 +161,13 @@ class TransactionsController extends BaseController
         $currentUser = auth()->user();
         $postData = $this->request->getPost();
 
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
+        
+        if(! $this->validate($rules, $messages)){
+            return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
+        }
+
         $transaction = $model->where('id', $postData['id'])
                              ->where('user_id', $currentUser->id)
                              ->first();

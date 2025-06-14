@@ -41,7 +41,7 @@ class PaymentMethodsController extends BaseController
 
         $rules = $model->getValidationRules();
         $messages = $model->getValidationMessages();
-        
+
         if (! $this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
@@ -82,6 +82,13 @@ class PaymentMethodsController extends BaseController
 
         $postData = $this->request->getPost();
 
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
+
+        if (! $this->validate($rules, $messages)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
+        }
+        
         $paymentMethod = $model->find($postData['id']);
 
         if (empty($paymentMethod)) {

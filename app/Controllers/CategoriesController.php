@@ -43,7 +43,7 @@ class CategoriesController extends BaseController
         $rules = $model->getValidationRules();
         $messages = $model->getValidationMessages();
 
-        if(! $this -> validate($rules,$messages)){
+        if (! $this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -51,10 +51,10 @@ class CategoriesController extends BaseController
         $category->fill($this->request->getPost());
         $category->type = (int) $this->request->getPost('type');
 
-        if($model->save($category)){
-          session()->setFlashdata('success', 'Categoria adicionada com sucesso!');
-          return redirect()->to('/admin/categorias');  
-        }else{
+        if ($model->save($category)) {
+            session()->setFlashdata('success', 'Categoria adicionada com sucesso!');
+            return redirect()->to('/admin/categorias');
+        } else {
             session()->setFlashdata('error', 'Erro ao adicionar categoria. Tente novamente.');
             return redirect()->back()->withInput();
         }
@@ -65,7 +65,7 @@ class CategoriesController extends BaseController
         $model = model(CategoryModel::class);
         $category = $model->find($id);
 
-        if(empty($category)){
+        if (empty($category)) {
             session()->setFlashdata('error', 'Categoria não encontrada.');
             return redirect()->to('admin/categorias');
         }
@@ -76,33 +76,39 @@ class CategoriesController extends BaseController
         ];
 
         return view('categories/edit', $data);
-
     }
 
     public function editPost()
-    {   
+    {
         $model = model(CategoryModel::class);
 
         $postData = $this->request->getPost();
 
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
+
+        if (! $this->validate($rules, $messages)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
+        }
+        
         $category = $model->find($postData['id']);
 
-        if(empty($category)){
+        if (empty($category)) {
             session()->setFlashdata('error', 'Categoria não encontrada para atualização.');
             return redirect()->to('admin/categorias');
         }
 
         $category->fill($postData);
 
-        if(!$category->haschanged()){
+        if (!$category->haschanged()) {
             session()->setFlashdata('info', 'Nenhuma alteração detectada para a categoria.');
             return redirect()->to('admin/categorias');
         }
 
-        if($model->save($category)){
+        if ($model->save($category)) {
             session()->setFlashdata('success', 'Categoria atualizada com sucesso!');
             return redirect()->to('admin/categorias');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao atualizar a categoria. Verifique os dados e tente novamente.');
             return redirect()->back()->withInput()->with('errors', $model->errors());
         }
@@ -111,19 +117,18 @@ class CategoriesController extends BaseController
     public function delete(int $id)
     {
         $model = model(CategoryModel::class);
-        
-        if(empty($id)){
-            session()->setFlashdata('error','Categoria não encontrada para exclusão.');
+
+        if (empty($id)) {
+            session()->setFlashdata('error', 'Categoria não encontrada para exclusão.');
             return redirect()->to('admin/categorias');
         }
-        
-        if($model->delete($id)){
+
+        if ($model->delete($id)) {
             session()->setFlashdata('success', 'Categoria excluída com sucesso!');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao excluir categoria. Tente novamente mais tarde!');
         }
 
         return redirect()->to('/admin/categorias');
-
     }
 }

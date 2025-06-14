@@ -18,9 +18,9 @@
                 <?= session()->getFlashdata('success') ?>
             </div>
         <?php endif; ?>
-        <?php if (session()->getFlashdata('error')): ?>
+        <?php if (session()->getFlashdata('errors')): ?>
             <div class="alert alert-danger">
-                <?= session()->getFlashdata('error') ?>
+                <?= session()->getFlashdata('errors') ?>
             </div>
         <?php endif; ?>
         <?php if (session()->getFlashdata('info')): ?>

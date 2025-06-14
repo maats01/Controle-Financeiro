@@ -85,6 +85,13 @@ class SituationsController extends BaseController
 
         $postData = $this->request->getPost();
 
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
+
+        if (! $this->validate($rules, $messages)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
+        }
+        
         $situation = $model->find($postData['id']);
 
         if (empty($situation)) {

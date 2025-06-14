@@ -18,9 +18,9 @@
             </div>
         <?php endif; ?>
         
-        <?php if (session()->getFlashdata('error')): ?>
+        <?php if (session()->getFlashdata('errors')): ?>
             <div class="alert alert-danger">
-                <?= session()->getFlashdata('error') ?>
+                <?= session()->getFlashdata('errors') ?>
                 <?php if (session()->getFlashdata('model_validation_errors')): ?>
                     <ul>
                     <?php foreach (session()->getFlashdata('model_validation_errors') as $field => $error): ?>
