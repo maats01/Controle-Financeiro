@@ -115,7 +115,12 @@ class TransactionsController extends BaseController
         $transaction->user_id = $currentUser->id;
         $transaction->amount = (float) str_replace(',', '.', $this->request->getPost('amount'));
 
-        $model->getValidationRules();
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
+        
+        if(! $this->validate($rules, $messages)){
+            return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
+        }
 
         if($model->save($transaction)){
             session()->setFlashdata('success', 'Lançamento adicionado com sucesso!');

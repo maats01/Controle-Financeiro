@@ -39,11 +39,10 @@ class PaymentMethodsController extends BaseController
     {
         $model = model(PaymentMethodModel::class);
 
-        $rules = [
-            'description' => 'required|min_length[3]|max_length[255]',
-        ];
-
-        if (! $this->validate($rules)) {
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
+        
+        if (! $this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 

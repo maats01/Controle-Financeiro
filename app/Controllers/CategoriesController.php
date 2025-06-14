@@ -40,12 +40,10 @@ class CategoriesController extends BaseController
     {
         $model = model(categoryModel::class);
 
-        $rules = [
-            'name' => 'required|min_length[3]|max_length[255]',
-            'type' => 'required|in_list[0,1]',
-        ];
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
 
-        if(! $this -> validate($rules)){
+        if(! $this -> validate($rules,$messages)){
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 

@@ -41,12 +41,10 @@ class SituationsController extends BaseController
     {
         $model = model(SituationModel::class);
 
-        $rules = [
-            'description' => 'required|min_length[3]|max_length[255]',
-            'type' => 'required|in_list[0,1]',
-        ];
+        $rules = $model->getValidationRules();
+        $messages = $model->getValidationMessages();
 
-        if (! $this->validate($rules)) {
+        if (! $this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
