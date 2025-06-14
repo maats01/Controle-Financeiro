@@ -150,6 +150,7 @@ class TransactionModel extends Model
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.user_id', $userId);
+        $builder->where('transactions.deleted_at', null);
         
         $builder->orderBy('date', 'desc');
         $query = $builder->get();
@@ -161,10 +162,12 @@ class TransactionModel extends Model
     {
         $builder = $this->builder();
         $builder->select('SUM(transactions.amount) as total_value');
+
         $builder->where('transactions.type', 1);
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.user_id', $userId);
+        $builder->where('transactions.deleted_at', null);
 
         $query = $builder->get();
         $row = $query->getRow();
@@ -181,10 +184,12 @@ class TransactionModel extends Model
     {
         $builder = $this->builder();
         $builder->select('SUM(transactions.amount) as total_value');
+
         $builder->where('transactions.type', 0);
         $builder->where('MONTH(transactions.date)', date('n'));
         $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.user_id', $userId);
+        $builder->where('transactions.deleted_at', null);
 
         $query = $builder->get();
         $row = $query->getRow();
@@ -195,5 +200,27 @@ class TransactionModel extends Model
         }
 
         return 0.0;
+    }
+
+    public function getCurrentYearTransactions($userId)
+    {
+        $builder = $this->builder();
+        $builder->select(
+            'DATE_FORMAT(transactions.date, \'%c\') AS month, 
+            SUM(CASE WHEN transactions.type = 0 THEN transactions.amount ELSE 0 END) AS expenses,
+            SUM(CASE WHEN transactions.type = 1 THEN transactions.amount ELSE 0 END) AS revenues'
+        );
+
+        $builder->where('transactions.user_id', $userId);
+        $builder->where('YEAR(transactions.date) = YEAR(CURDATE())');
+        $builder->where('transactions.deleted_at', null);
+
+        $builder->groupBy(['YEAR(transactions.date)', 'MONTH(transactions.date)', 'month']);
+        $builder->orderBy('YEAR(transactions.date)', 'ASC');
+        $builder->orderBy('MONTH(transactions.date)', 'ASC');
+
+        $query = $builder->get();
+
+        return $query->getResult();
     }
 }

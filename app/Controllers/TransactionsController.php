@@ -39,17 +39,14 @@ class TransactionsController extends BaseController
         $categoryId = $request->getGet('category_id') ?? '';
         $paymentMethodId = $request->getGet('payment_method_id') ?? '';
 
-        if (isset($categoryId) && is_numeric($categoryId))
-        {
+        if (isset($categoryId) && is_numeric($categoryId)) {
             $category = $this->categoryModel->find((int) $categoryId);
         }
         $situationId = $request->getGet('situation_id') ?? '';
-        if (isset($situationId) && is_numeric($situationId))
-        {
+        if (isset($situationId) && is_numeric($situationId)) {
             $situation = $this->situationModel->find((int) $situationId);
         }
-        if (isset($paymentMethodId) && is_numeric($paymentMethodId))
-        {
+        if (isset($paymentMethodId) && is_numeric($paymentMethodId)) {
             $paymentMethod = $this->paymentMethodModel->find((int) $paymentMethodId);
         }
 
@@ -79,12 +76,28 @@ class TransactionsController extends BaseController
         $receitasMes = $model->getCurrentRevenue($currentUser->id);
         $currentMonthYear = $time->toLocalizedString('MMMM yyyy');
 
+        // getting data to plot the line graph
+        $latest_transactions = $model->getCurrentYearTransactions($currentUser->id);
+        $currentYear = date('Y');
+        $labels = ["Jan/$currentYear", "Fev/$currentYear", "Mar/$currentYear", "Abr/$currentYear", "Mai/$currentYear", "Jun/$currentYear", "Jul/$currentYear", "Ago/$currentYear", "Set/$currentYear", "Out/$currentYear", "Nov/$currentYear", "Dez/$currentYear"];
+
+        $expenses_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $revenues_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        foreach ($latest_transactions as $t) {
+            $month = (int) $t->month;
+            $expenses_data[$month - 1] = $t->expenses;
+            $revenues_data[$month - 1] = $t->revenues;
+        }
+        
         $data = [
             'transactions_list' => $transactions,
             'despesasMes' => $despesasMes,
             'receitasMes' => $receitasMes,
+            'labels_for_line_graph' => $labels,
+            'latest_expenses' => $expenses_data,
+            'latest_revenues' => $revenues_data,
             'saldoAtualMes' => $receitasMes - $despesasMes,
-            'title' => 'Dashboard Financeiro - ' . ucfirst($currentMonthYear), 
+            'title' => 'Dashboard Financeiro - ' . ucfirst($currentMonthYear),
         ];
 
         return view('transactions/dashboard', $data);
@@ -98,16 +111,15 @@ class TransactionsController extends BaseController
             'situations' => $this->situationModel->findAll(),
             'payment_methods' => $this->paymentMethodModel->findAll(),
         ];
-        
-        return view('transactions/create', $data);
 
+        return view('transactions/create', $data);
     }
 
     public function createPost()
     {
         $model = model(TransactionModel::class);
         $currentUser = auth()->user();
-          
+
         $transaction = new Transaction();
         $transaction->fill($this->request->getPost());
         $transaction->user_id = $currentUser->id;
@@ -115,15 +127,15 @@ class TransactionsController extends BaseController
 
         $rules = $model->getValidationRules();
         $messages = $model->getValidationMessages();
-        
-        if(! $this->validate($rules, $messages)){
+
+        if (! $this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
         }
 
-        if($model->save($transaction)){
+        if ($model->save($transaction)) {
             session()->setFlashdata('success', 'Lançamento adicionado com sucesso!');
             return redirect()->to('/lancamentos');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao adicionar lançamento. Verifique os dados e tente novamente');
             return redirect()->back()->withInput()->with('errors', $model->errors());
         }
@@ -136,10 +148,10 @@ class TransactionsController extends BaseController
 
         // Busca a transação pelo ID E pelo user_id para garantir permissão
         $transaction = $model->where('id', $id)
-                             ->where('user_id', $currentUser->id)
-                             ->first();
+            ->where('user_id', $currentUser->id)
+            ->first();
 
-        if(empty($transaction)){
+        if (empty($transaction)) {
             session()->setFlashdata('error', 'Lançamento não encontrado ou você não tem permissão para editá-lo.');
             return redirect()->to('/lancamentos');
         }
@@ -152,9 +164,8 @@ class TransactionsController extends BaseController
         ];
 
         return view('transactions/edit', $data);
+    }
 
-    }    
-    
     public function editPost()
     {
         $model = model(TransactionModel::class);
@@ -163,16 +174,16 @@ class TransactionsController extends BaseController
 
         $rules = $model->getValidationRules();
         $messages = $model->getValidationMessages();
-        
-        if(! $this->validate($rules, $messages)){
+
+        if (! $this->validate($rules, $messages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
         }
 
         $transaction = $model->where('id', $postData['id'])
-                             ->where('user_id', $currentUser->id)
-                             ->first();
+            ->where('user_id', $currentUser->id)
+            ->first();
 
-        if(empty($transaction)){
+        if (empty($transaction)) {
             session()->setFlashdata('error', 'Lançamento não encontrado para atualização ou você não tem permissão.');
             return redirect()->to('/lancamentos');
         }
@@ -181,41 +192,40 @@ class TransactionsController extends BaseController
 
         $transaction->amount = (float) str_replace(',', '.', $this->request->getPost('amount'));
 
-        if(!$transaction->hasChanged()){
+        if (!$transaction->hasChanged()) {
             session()->setFlashdata('info', 'Nenhuma alteração detectada para o lançamento.');
             return redirect()->to('lancamentos');
         }
 
-        if($model->save($transaction)){
+        if ($model->save($transaction)) {
             session()->setFlashdata('success', 'Lançamento atualizado com sucesso!');
             return redirect()->to('/lancamentos');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao atualizar o lançamento. Verifique os dados e tente novamente.');
             return redirect()->back()->withInput()->with('errors', $model->errors());
-        }   
+        }
     }
 
     public function delete(int $id)
-    {  
+    {
         $model = model(TransactionModel::class);
         $currentUser = auth()->user();
 
         $transaction = $model->where('id', $id)
-                             ->where('user_id', $currentUser->id)
-                             ->first();
+            ->where('user_id', $currentUser->id)
+            ->first();
 
-        if(empty($transaction)){
-            session()->setFlashdata('error','Lançamento não encontrado ou você não tem permissão para excluí-lo.');
+        if (empty($transaction)) {
+            session()->setFlashdata('error', 'Lançamento não encontrado ou você não tem permissão para excluí-lo.');
             return redirect()->to('/lancamentos');
         }
-        
-        if($model->delete($id)){
+
+        if ($model->delete($id)) {
             session()->setFlashdata('success', 'Lançamento excluído com sucesso!');
-        }else{
+        } else {
             session()->setFlashdata('error', 'Erro ao excluir lançamento. Tente novamente mais tarde!');
         }
 
         return redirect()->to('/lancamentos');
-    
     }
 }
