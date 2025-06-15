@@ -90,11 +90,15 @@
     <div class="col-xl-8 col-lg-7">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Visão Geral - Lançamentos do ano</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Visão Geral - Lançamentos do Ano</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area">
-                    <canvas id="revenueExpenseChart"></canvas>
+                <div class="chart-area" style="height: 400px">
+                    <canvas id="revenueExpenseChart"
+                        data-labels='<?= json_encode($labels_for_line_graph) ?>'
+                        data-expenses='<?= json_encode($latest_expenses) ?>'
+                        data-revenues='<?= json_encode($latest_revenues) ?>'>>
+                    </canvas>
                 </div>
             </div>
         </div>
@@ -102,11 +106,14 @@
     <div class="col-xl-4 col-lg-5">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Top 5 Categorias com Mais Gasto no Mês Atual</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Gastos por Categoria no Mês Atual</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area">
-                    <canvas id="revenueExpenseChart"></canvas>
+                <div class="chart-area" style="height: 400px">
+                    <canvas id="expensesByCategory"
+                        data-labels='<?= json_encode($labels_for_doughnut_graph) ?>'
+                        data-data='<?= json_encode($data_for_doughnut_graph) ?>'>
+                    </canvas>
                 </div>
             </div>
         </div>
@@ -157,7 +164,13 @@
                                             <a href="<?= base_url('/lancamentos/editar/' . esc($transaction->id, 'url')) ?>" class="btn btn-sm btn-info" title="Editar">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a href="<?= base_url('/lancamentos/deletar/' . esc($transaction->id, 'url')) ?>" class="btn btn-sm btn-danger" title="Excluir" onclick="return confirm('Tem certeza que deseja excluir este lançamento?');">
+                                            <a href="#" class="btn btn-sm btn-danger" title="Excluir"
+                                                data-toggle="modal"
+                                                data-target="#deleteModal"
+                                                data-id="<?= esc($transaction->id) ?>"
+                                                data-name="<?= esc($transaction->description) ?>"
+                                                data-controller="lancamentos"
+                                                data-base="">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </td>
@@ -175,76 +188,34 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir o lançamento <strong id="itemNameToDelete"></strong>?
+                <p class="text-danger mt-2">Esta ação não pode ser desfeita e pode afetar saldos e relatórios.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" action="" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
+<script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@^2.0.0"></script>
-<script>
-    Chart.register(ChartDataLabels);
-
-    var ctx = document.getElementById("revenueExpenseChart");
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($labels_for_line_graph) ?>,
-            datasets: [{
-                label: "Despesas",
-                data: <?= json_encode($latest_expenses) ?>,
-                backgroundColor: "rgb(255, 0, 0)",
-                borderColor: "rgb(255, 0, 0)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgb(255, 0, 0)",
-                pointBorderColor: "rgba(78, 114, 223, 0.1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgb(255, 0, 0)",
-                pointHoverBorderColor: "rgb(255, 0, 0)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-            }, {
-                label: "Receitas",
-                data: <?= json_encode($latest_revenues) ?>,
-                backgroundColor: "rgb(0, 62, 255)",
-                borderColor: "rgb(0, 62, 255)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointBorderColor: "rgba(78, 115, 223, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            scales: {
-                y: {
-                    ticks: {
-                        callback: function(value, index, ticks) {
-                            return 'R$ ' + value;
-                        },
-                    },
-                    beginAtZero: true,
-                }
-            },
-            plugins: {
-                datalabels: {
-                    anchor: 'end',
-                    align: 'top',
-                    color: '#333',
-                    font: {
-                        'weight': 'bold',
-                        size: 12
-                    },
-                    formatter: function(value, context) {
-                        return value;
-                    },
-                },
-            }
-        }
-    });
-</script>
+<script src="<?= base_url('js/graphicsForDashboard.js') ?>"></script>
 <?= $this->endSection() ?>

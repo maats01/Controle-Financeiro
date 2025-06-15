@@ -71,16 +71,15 @@ class TransactionsController extends BaseController
         $currentUser = auth()->user();
         $model = model(TransactionModel::class);
 
+        // getting data to display overall expenses and revenue of the current month
         $transactions = $model->getLatestTransactions($currentUser->id);
         $despesasMes = $model->getCurrentCosts($currentUser->id);
         $receitasMes = $model->getCurrentRevenue($currentUser->id);
-        $currentMonthYear = $time->toLocalizedString('MMMM yyyy');
 
         // getting data to plot the line graph
         $latest_transactions = $model->getCurrentYearTransactions($currentUser->id);
         $currentYear = date('Y');
-        $labels = ["Jan/$currentYear", "Fev/$currentYear", "Mar/$currentYear", "Abr/$currentYear", "Mai/$currentYear", "Jun/$currentYear", "Jul/$currentYear", "Ago/$currentYear", "Set/$currentYear", "Out/$currentYear", "Nov/$currentYear", "Dez/$currentYear"];
-
+        $labels_for_line_graph = ["Jan/$currentYear", "Fev/$currentYear", "Mar/$currentYear", "Abr/$currentYear", "Mai/$currentYear", "Jun/$currentYear", "Jul/$currentYear", "Ago/$currentYear", "Set/$currentYear", "Out/$currentYear", "Nov/$currentYear", "Dez/$currentYear"];
         $expenses_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         $revenues_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         foreach ($latest_transactions as $t) {
@@ -88,16 +87,27 @@ class TransactionsController extends BaseController
             $expenses_data[$month - 1] = $t->expenses;
             $revenues_data[$month - 1] = $t->revenues;
         }
+
+        // getting data to plot the doughnut graph
+        $expenses_by_category = $model->getCurrentMonthExpensesByCategory($currentUser->id);
+        $total_amounts_by_category = [];
+        $labels_for_doughnut_graph = [];
+        foreach ($expenses_by_category as $e) {
+            $labels_for_doughnut_graph[] = $e->category;
+            $total_amounts_by_category[] = $e->total;
+        }
         
         $data = [
             'transactions_list' => $transactions,
             'despesasMes' => $despesasMes,
             'receitasMes' => $receitasMes,
-            'labels_for_line_graph' => $labels,
+            'labels_for_doughnut_graph' => $labels_for_doughnut_graph,
+            'data_for_doughnut_graph' => $total_amounts_by_category,
+            'labels_for_line_graph' => $labels_for_line_graph,
             'latest_expenses' => $expenses_data,
             'latest_revenues' => $revenues_data,
             'saldoAtualMes' => $receitasMes - $despesasMes,
-            'title' => 'Dashboard Financeiro - ' . ucfirst($currentMonthYear),
+            'title' => 'Dashboard Financeiro - ' . ucfirst($time->toLocalizedString('MMMM yyyy')),
         ];
 
         return view('transactions/dashboard', $data);

@@ -25,7 +25,7 @@ class TransactionModel extends Model
     protected $useTimestamps = true;
     protected $useSoftDeletes = true;
 
-        protected $validationRules = [
+    protected $validationRules = [
         'description'       => 'required|min_length[3]|max_length[255]',
         'amount'            => 'required|numeric|greater_than[0]',
         'type'              => 'required|in_list[0,1]',
@@ -122,7 +122,7 @@ class TransactionModel extends Model
         }
 
         $builder->where('transactions.user_id', $userId);
-        
+
         $builder->orderBy($sortBy, $sortOrder);
 
         return $this;
@@ -151,7 +151,7 @@ class TransactionModel extends Model
         $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.user_id', $userId);
         $builder->where('transactions.deleted_at', null);
-        
+
         $builder->orderBy('date', 'desc');
         $query = $builder->get();
 
@@ -172,8 +172,7 @@ class TransactionModel extends Model
         $query = $builder->get();
         $row = $query->getRow();
 
-        if ($row && isset($row->total_value))
-        {
+        if ($row && isset($row->total_value)) {
             return (float) $row->total_value;
         }
 
@@ -194,8 +193,7 @@ class TransactionModel extends Model
         $query = $builder->get();
         $row = $query->getRow();
 
-        if ($row && isset($row->total_value))
-        {
+        if ($row && isset($row->total_value)) {
             return (float) $row->total_value;
         }
 
@@ -212,12 +210,34 @@ class TransactionModel extends Model
         );
 
         $builder->where('transactions.user_id', $userId);
-        $builder->where('YEAR(transactions.date) = YEAR(CURDATE())');
+        $builder->where('YEAR(transactions.date)', date('Y'));
         $builder->where('transactions.deleted_at', null);
 
         $builder->groupBy(['YEAR(transactions.date)', 'MONTH(transactions.date)', 'month']);
         $builder->orderBy('YEAR(transactions.date)', 'ASC');
         $builder->orderBy('MONTH(transactions.date)', 'ASC');
+
+        $query = $builder->get();
+
+        return $query->getResult();
+    }
+
+    public function getCurrentMonthExpensesByCategory($userId)
+    {
+        $builder = $this->builder();
+        $builder->select('categories.name AS category, SUM(transactions.amount) AS total');
+
+        $builder->join('categories', 'categories.id = transactions.category_id', 'left');
+
+        $builder->where('transactions.deleted_at', null);
+        $builder->where('user_id', $userId);
+        $builder->where('categories.type', 0);
+        $builder->where('YEAR(transactions.date)', date('Y'));
+        $builder->where('MONTH(transactions.date)', date('n'));
+
+        $builder->groupBy('category');
+
+        $builder->orderBy('total', 'DESC');
 
         $query = $builder->get();
 
