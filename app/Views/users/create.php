@@ -50,6 +50,31 @@
                 </div>
             </div>
 
+                        <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="active">Status:</label>
+                    <select class="form-control" id="active" name="active" required>
+                        <option value="1" <?= old('active', '1') === '1' ? 'selected' : '' ?>>Ativo</option>
+                        <option value="0" <?= old('active') === '0' ? 'selected' : '' ?>>Inativo</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="group">Grupo do Usuário:</label>
+                    <select class="form-control" id="group" name="group" required>
+                        <?php 
+                        // Carrega a configuração de grupos do Shield para obter os grupos disponíveis
+                        $config = config(\Config\AuthGroups::class);
+                        $availableGroups = array_keys($config->groups); 
+                        
+                        foreach ($availableGroups as $groupName): ?>
+                            <option value="<?= esc($groupName) ?>" <?= old('group') === $groupName ? 'selected' : '' ?>>
+                                <?= esc(ucfirst($groupName)) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            </div>
+            
             <button type="submit" class="btn btn-success">
                 <i class="fas fa-save"></i> Salvar Usuário
             </button>

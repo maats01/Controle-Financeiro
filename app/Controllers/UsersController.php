@@ -39,6 +39,14 @@ class UsersController extends BaseController
             'label' => 'Auth.passwordConfirm',
             'rules' => 'required|matches[password]',
         ],
+        'active' => [
+            'label' => 'Status',
+            'rules' => 'required|in_list[0,1]',
+        ],
+        'group' => [
+            'label' => 'Grupo do Usuário',
+            'rules' => 'required|alpha_dash',
+        ],
     ];
 
     private array $errorMessages = [
@@ -61,6 +69,15 @@ class UsersController extends BaseController
         'password_confirm' => [
             'required' => 'É necessário confirmar a senha',
             'matches' => 'As senhas devem ser iguais'
+        ],
+        'active' => [
+            'required' => 'O status é obrigatório.',
+            'in_list' => 'O status deve ser 0 (Inativo) ou 1 (Ativo).',
+        ],
+        'group' => [
+            'required' => 'O grupo do usuário é obrigatório.',
+            'alpha_dash' => 'O grupo do usuário deve conter apenas caracteres alfanuméricos, sublinhados ou traços.',
+            'is_not_unique' => 'O grupo selecionado não é um grupo Shield válido.',
         ],
     ];
 
@@ -109,6 +126,24 @@ class UsersController extends BaseController
         if ($model->save($user)) {
             $user = $model->findByID($model->getInsertID());
             $model->addToDefaultGroup($user);
+
+            $activeStatus = (int) $request->getPost('active');
+            $groupName = $request->getPost('group');
+
+            if ($activeStatus === 1) {
+                $user->activate(); 
+            } else {
+                $user->deactivate();
+            }
+            $model->save($user);
+
+            foreach ($user->getGroups() as $currentGroup) {
+                $user->removeGroup($currentGroup);
+            }
+
+            $user->addGroup($groupName);
+            $model->save($user); 
+
             session()->setFlashdata('success', 'Usuário criado com sucesso!');
 
             return redirect()->to('/admin/usuarios');
