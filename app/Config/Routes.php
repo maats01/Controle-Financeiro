@@ -76,7 +76,8 @@ $routes->group('admin', ['filters' => 'group:admin'], static function ($routes)
     {
         $routes->get('criar', [UsersController::class, 'create']);
         $routes->post('salvar', [UsersController::class, 'createPost']);
-        $routes->post('editar/(:num)', [UsersController::class, 'edit/$1']);
+        $routes->get('editar/(:num)', [UsersController::class, 'edit/$1']);
+        $routes->post('atualizar/(:num)', [UsersController::class, 'editPost/$1']);
         $routes->post('deletar/(:num)', [UsersController::class, 'delete/$1']);
     });
 });

@@ -37,7 +37,7 @@ $baseUrl = '/admin/usuarios';
                         <label for="email">Email</label>
                         <input type="email" class="form-control form-control-sm" id="email" name="email" placeholder="Buscar por email..." value="<?= isset($_GET['email']) ? esc($_GET['email']) : '' ?>">
                     </div>
-                     <div class="form-group col-md-2">
+                    <div class="form-group col-md-2">
                         <label for="active">Status</label>
                         <select id="active" name="active" class="form-control form-control-sm">
                             <option value="">Todos</option>
@@ -70,6 +70,11 @@ $baseUrl = '/admin/usuarios';
         <?php if (session()->getFlashdata('error')): ?> 
             <div class="alert alert-danger">
                 <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('info')): ?>
+            <div class="alert alert-info">
+                <?= session()->getFlashdata('info') ?>
             </div>
         <?php endif; ?>
         <div class="col-sm-12 col-md-6">
@@ -126,10 +131,16 @@ $baseUrl = '/admin/usuarios';
                                     <a href="/admin/usuarios/editar/<?= esc($user->id) ?>" class="btn btn-sm btn-info" title="Editar Usuário">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="/admin/usuarios/grupos/<?= esc($user->id) ?>" class="btn btn-sm btn-secondary" title="Gerenciar Grupos">
+                                    <a href="/admin/usuarios/senha/<?= esc($user->id) ?>" class="btn btn-sm btn-secondary" title="alterar senha">
                                         <i class="fas fa-users-cog"></i>
                                     </a>
-                                    <a href="/admin/usuarios/deletar/<?= esc($user->id) ?>" class="btn btn-sm btn-danger" title="Excluir Usuário" onclick="return confirm('Tem certeza que deseja excluir este usuário? Esta ação é irreversível!');">
+                                    <a href="#" class="btn btn-danger btn-circle btn-sm" title="Deletar"
+                                        data-toggle="modal"
+                                        data-target="#deleteModal"
+                                        data-id="<?= $user->id ?>"
+                                        data-name="<?= $user->username ?>"
+                                        data-controller="usuarios"
+                                        data-base="/admin">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>
@@ -137,7 +148,7 @@ $baseUrl = '/admin/usuarios';
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="text-center">Nenhum usuário encontrado.</td>
+                            <td colspan="8" class="text-center">Nenhum usuário encontrado.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -151,7 +162,33 @@ $baseUrl = '/admin/usuarios';
         <?php endif; ?>
     </div>
 </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Você tem certeza que deseja excluir o usuário <strong id="itemNameToDelete"></strong>?
+                <p class="text-danger mt-2">Esta ação não pode ser desfeita e removerá o usuário permanentemente.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancelar</button>
+                <form id="deleteForm" action="" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
+<script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <script src="<?= base_url('js/handlePerPageChange.js') ?>"></script>
 <?= $this->endSection() ?>

@@ -8,7 +8,7 @@ use CodeIgniter\Shield\Models\UserModel;
 
 class UsersController extends BaseController
 {
-    private array $createUserRules = [
+    private array $UserRules = [
         'username' => [
             'label' => 'Auth.username',
             'rules' => [
@@ -90,7 +90,7 @@ class UsersController extends BaseController
         $searchForEmail = $request->getGet('email') ?? '';
         $isActive = is_numeric($request->getGet('active')) ? (int) $request->getGet('active') : null;
         $sortBy = $request->getGet('sort') ?? 'id';
-        $sortOrder = $request->getGet('order') ?? 'DESC';
+        $sortOrder = $request->getGet('order') ?? 'ASC';
         $perPage = $request->getGet('per_page') ?? 10;
 
         $data = [
@@ -117,7 +117,7 @@ class UsersController extends BaseController
         $model = auth()->getProvider();
         $request = $this->request;
 
-        if (! $this->validate($this->createUserRules, $this->errorMessages)) {
+        if (! $this->validate($this->UserRules, $this->errorMessages)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->listErrors());
         }
 
@@ -151,5 +151,119 @@ class UsersController extends BaseController
             session()->setFlashdata('error', 'Erro ao adicionar o novo usuário. Verifique os dados e tente novamente.');
             return redirect()->back()->withInput()->with('errors', $model->errors());
         }
+    }
+
+    public function edit(int $id)
+    {
+                $model = auth()->getProvider();
+        $user = $model->findById($id);
+
+        if (empty($user)) {
+            session()->setFlashdata('error', 'Usuário não encontrado.');
+            return redirect()->to('/admin/usuarios');
+        }
+
+        $data = [
+            'title' => 'Editar Usuário',
+            'user'  => $user,
+        ];
+
+        return view('users/edit', $data);
+    }
+
+    public function editPost(int $id)
+    {
+        $model = auth()->getProvider();
+        $request = $this->request;
+
+        $user = $model->findById($id);
+
+        if (empty($user)) {
+            session()->setFlashdata('error', 'Usuário não encontrado para edição.');
+            return redirect()->to('/admin/usuarios');
+        }
+
+        $editRules = $this->UserRules;
+
+        unset($editRules['password']);
+        unset($editRules['password_confirm']);        
+
+        $editRules['username']['rules'] = array_map(function($rules) use ($user) {
+            if ($rules === 'is_unique[users.username]') {
+                return 'is_unique[users.username,id,' . $user->id . ']';
+            }
+            return $rules;
+        }, $editRules['username']['rules']);
+        $editRules['email']['rules'] = array_map(function($rules) use ($user) {
+            if ($rules === 'is_unique[auth_identities.secret]') {
+                return 'is_unique[auth_identities.secret,user_id,' . $user->id . ']';
+            }
+            return $rules;
+        }, $editRules['email']['rules']);
+
+        if (! $model->save($user)) {
+            session()->setFlashdata('error', 'Erro ao salvar as alterações do usuário. Verifique os dados e tente novamente.');
+            return redirect()->back()->withInput()->with('errors', $model->errors());
+        }
+
+        $user->username = $request->getPost('username');
+        $user->active = (int) $request->getPost('active');
+        $user->setEmail($request->getPost('email'));
+
+        $newGroupName = $request->getPost('group');
+        $currentGroups = $user->getGroups();
+        $groupChanged = (! in_array($newGroupName, $currentGroups));
+
+        if (!$user->hasChanged() && !$groupChanged) {
+            session()->setFlashdata('info', 'Nenhuma alteração detectada para o usuário.');
+            return redirect()->to('/admin/usuarios');
+        }
+
+        if (! $model->save($user)) {
+            session()->setFlashdata('error', 'Erro ao salvar as alterações do usuário. Verifique os dados e tente novamente.');
+            return redirect()->back()->withInput()->with('errors', $model->errors());
+        }
+
+        if ($groupChanged) {
+            foreach ($currentGroups as $currentGroup) {
+                $user->removeGroup($currentGroup);
+            }
+            $user->addGroup($newGroupName);
+            $model->save($user);
+        }
+        
+        session()->setFlashdata('success', 'Usuário atualizado com sucesso!');
+        return redirect()->to('/admin/usuarios');
+    }
+
+    public function delete(int $id)
+    {
+        $model = model(UserModel::class);
+        $currentUser = auth()->user();
+
+        $userToDelete = $model->find($id);
+
+        if (empty($userToDelete)) {
+            session()->setFlashdata('error', 'Usuário não encontrado.');
+            return redirect()->to('/admin/usuarios');
+        }
+
+        if ($userToDelete->id === $currentUser->id) {
+            session()->setFlashdata('error', 'Você não pode excluir seu próprio usuário.');
+            return redirect()->to('/admin/usuarios');
+        }
+
+        if (! $currentUser->inGroup('admin')) {
+             session()->setFlashdata('error', 'Você não tem permissão para excluir usuários.');
+             return redirect()->to('/admin/usuarios');
+        }
+
+        if ($model->delete($id)) {
+            session()->setFlashdata('success', 'Usuário excluído com sucesso!');
+        } else {
+            session()->setFlashdata('error', 'Erro ao excluir usuário. Tente novamente mais tarde!');
+        }
+
+        return redirect()->to('/admin/usuarios');
     }
 }
