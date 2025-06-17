@@ -1,5 +1,3 @@
-// graphsForDashboard.js
-
 document.addEventListener('DOMContentLoaded', () => {
     Chart.register(ChartDataLabels);
 
@@ -20,29 +18,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 datasets: [{
                     label: "Despesas",
                     data: expensesData,
-                    backgroundColor: "rgb(255, 0, 0)",
-                    borderColor: "rgb(255, 0, 0)",
                     pointRadius: 3,
-                    pointBackgroundColor: "rgb(255, 0, 0)",
-                    pointBorderColor: "rgba(78, 114, 223, 0.1)",
                     pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgb(255, 0, 0)",
-                    pointHoverBorderColor: "rgb(255, 0, 0)",
                     pointHitRadius: 10,
-                    pointBorderWidth: 2,
                 }, {
                     label: "Receitas",
                     data: revenuesData,
-                    backgroundColor: "rgb(0, 62, 255)",
-                    borderColor: "rgb(0, 62, 255)",
                     pointRadius: 3,
-                    pointBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointBorderColor: "rgba(78, 115, 223, 1)",
                     pointHoverRadius: 3,
-                    pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
-                    pointHoverBorderColor: "rgba(78, 115, 223, 1)",
                     pointHitRadius: 10,
-                    pointBorderWidth: 2,
                 }]
             },
             options: {
@@ -75,6 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             return 'R$ ' + value
                         }
                     },
+                    colorschemes: {
+                        scheme: 'tableau.ClassicBlueRed2'
+                    }
                 }
             }
         });
@@ -90,29 +77,50 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = JSON.parse(canvas.dataset.data || '[]');
 
         new Chart(canvas, {
-            type: 'doughnut',
+            type: 'pie',
             data: {
                 labels: labels,
                 datasets: [{
                     label: "Despesas",
                     data: data,
                     hoverOffset: 4,
+                    borderColor: '#36454F20',
+                    radius: '90%'
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    autoPadding: true
+                },
                 plugins: {
                     datalabels: {
+                        align: 'end',
+                        anchor: 'end',
                         color: 'black',
                         font: {
                             'weight': 'bold',
-                            size: 12
+                            size: 11
                         },
-                        display: 'auto',
-                        formatter: function (value, context) {
-                            return 'R$ ' + value;
+                        formatter: function (value, ctx) {
+                            const totalSum = ctx.dataset.data.reduce((accumulator, currentValue) => {
+                                return accumulator + currentValue
+                            }, 0);
+                            const percentage = value / totalSum * 100;
+                            if (percentage >= 0) {
+                                return `${percentage.toFixed(1)}%`;
+                            }
+                            else {
+                                return '';
+                            }
                         }
+                    },
+                    legend: {
+                        position: 'top'
+                    },
+                    colorschemes: {
+                        scheme: 'tableau.BlueTeal20'
                     }
                 }
             }

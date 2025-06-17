@@ -87,13 +87,13 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-xl-8 col-lg-7">
+    <div class="col-xl-7 col-lg-7">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Visão Geral - Lançamentos do Ano</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" style="height: 400px">
+                <div class="chart-area" style="height: 450px">
                     <canvas id="revenueExpenseChart"
                         data-labels='<?= json_encode($labels_for_line_graph) ?>'
                         data-expenses='<?= json_encode($latest_expenses) ?>'
@@ -103,16 +103,16 @@
             </div>
         </div>
     </div>
-    <div class="col-xl-4 col-lg-5">
+    <div class="col-xl-5 col-lg-5">
         <div class="card shadow mb-4">
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">Gastos por Categoria no Mês Atual</h6>
             </div>
             <div class="card-body">
-                <div class="chart-area" style="height: 400px">
+                <div class="chart-area" style="height: 450px">
                     <canvas id="expensesByCategory"
-                        data-labels='<?= json_encode($labels_for_doughnut_graph) ?>'
-                        data-data='<?= json_encode($data_for_doughnut_graph) ?>'>
+                        data-labels='<?= json_encode($labels_for_pie_graph) ?>'
+                        data-data='<?= json_encode($data_for_pie_graph) ?>'>
                     </canvas>
                 </div>
             </div>
@@ -217,5 +217,6 @@
 <script src="<?= base_url('js/confirmDeletion.js') ?>"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@^2.0.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/hw-chartjs-plugin-colorschemes"></script>
 <script src="<?= base_url('js/graphicsForDashboard.js') ?>"></script>
 <?= $this->endSection() ?>

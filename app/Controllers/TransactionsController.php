@@ -91,18 +91,18 @@ class TransactionsController extends BaseController
         // getting data to plot the doughnut graph
         $expenses_by_category = $model->getCurrentMonthExpensesByCategory($currentUser->id);
         $total_amounts_by_category = [];
-        $labels_for_doughnut_graph = [];
+        $labels_for_pie_graph = [];
         foreach ($expenses_by_category as $e) {
-            $labels_for_doughnut_graph[] = $e->category;
-            $total_amounts_by_category[] = $e->total;
+            $labels_for_pie_graph[] = $e->category;
+            $total_amounts_by_category[] = (float) $e->total;
         }
         
         $data = [
             'transactions_list' => $transactions,
             'despesasMes' => $despesasMes,
             'receitasMes' => $receitasMes,
-            'labels_for_doughnut_graph' => $labels_for_doughnut_graph,
-            'data_for_doughnut_graph' => $total_amounts_by_category,
+            'labels_for_pie_graph' => $labels_for_pie_graph,
+            'data_for_pie_graph' => $total_amounts_by_category,
             'labels_for_line_graph' => $labels_for_line_graph,
             'latest_expenses' => $expenses_data,
             'latest_revenues' => $revenues_data,
