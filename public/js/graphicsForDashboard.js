@@ -16,14 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: "Despesas",
-                    data: expensesData,
+                    label: "Receitas",
+                    data: revenuesData,
                     pointRadius: 3,
                     pointHoverRadius: 3,
                     pointHitRadius: 10,
                 }, {
-                    label: "Receitas",
-                    data: revenuesData,
+                    label: "Despesas",
+                    data: expensesData,
                     pointRadius: 3,
                     pointHoverRadius: 3,
                     pointHitRadius: 10,
@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         position: 'top'
                     },
                     colorschemes: {
-                        scheme: 'tableau.BlueTeal20'
+                        scheme: 'brewer.Paired12'
                     }
                 }
             }
