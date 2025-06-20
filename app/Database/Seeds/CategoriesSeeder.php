@@ -3,14 +3,14 @@
 namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
-use App\Models\CategoriesModel;
+use App\Models\CategoryModel;
 
 
 class CategoriesSeeder extends Seeder
 {
     public function run()
     {
-        $model = model(CategoriesModel::class);
+        $model = model(CategoryModel::class);
         $data = [
             ['type' => 0, 'name' => 'Lazer e Entretenimento'],
             ['type' => 0, 'name' => 'Alimentação'],
