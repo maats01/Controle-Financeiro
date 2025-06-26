@@ -73,6 +73,7 @@ class TransactionModel extends Model
     public function getFilteredTransactionsWithDetails($startDate, $endDate, $type, $category_id, $situation_id, $searchString, $paymentMethodId, $userId, $sortBy = 'id', $sortOrder = 'DESC')
     {
         $builder = $this->builder();
+
         $builder->select('
             transactions.id, 
             transactions.type, 
@@ -93,37 +94,37 @@ class TransactionModel extends Model
         $validEndDate = isset($endDate) && $endDate != '';
 
         if ($validStartDate && $validEndDate) {
-            $builder->where('transactions.date >=', $startDate);
-            $builder->where('transactions.date <=', $endDate);
+            $builder->where('transactions.date >=', $startDate, true);
+            $builder->where('transactions.date <=', $endDate, true);
         } else if ($validStartDate) {
-            $builder->where('transactions.date >=', $startDate);
+            $builder->where('transactions.date >=', $startDate, true);
         } else if ($validEndDate) {
-            $builder->where('transactions.date <=', $endDate);
+            $builder->where('transactions.date <=', $endDate, true);
         }
 
         if (isset($type) && $type != '') {
-            $builder->where('transactions.type', $type);
+            $builder->where('transactions.type', $type, true);
         }
 
         if (isset($category_id) && is_numeric($category_id)) {
-            $builder->where('transactions.category_id', (int) $category_id);
+            $builder->where('transactions.category_id', (int) $category_id, true);
         }
 
         if (isset($situation_id) && is_numeric($situation_id)) {
-            $builder->where('transactions.situation_id', (int) $situation_id);
+            $builder->where('transactions.situation_id', (int) $situation_id, true);
         }
 
         if (isset($paymentMethodId) && is_numeric($paymentMethodId)) {
-            $builder->where('transactions.payment_method_id', (int) $paymentMethodId);
+            $builder->where('transactions.payment_method_id', (int) $paymentMethodId, true);
         }
 
         if (isset($searchString) && $searchString != '') {
-            $builder->like('transactions.description', $searchString, 'both');
+            $builder->like('transactions.description', $searchString, 'both', true);
         }
 
-        $builder->where('transactions.user_id', $userId);
+        $builder->where('transactions.user_id', $userId, true);
 
-        $builder->orderBy($sortBy, $sortOrder);
+        $builder->orderBy($sortBy, $sortOrder, true);
 
         return $this;
     }
