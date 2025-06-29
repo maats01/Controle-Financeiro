@@ -35,7 +35,7 @@
                             Receitas
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            R$ <?= isset($receitasMes) ? esc(number_format($receitasMes, 2, ',', '.')) : '0,00' ?>
+                            R$ <?= isset($month_revenues) ? esc(number_format($month_revenues, 2, ',', '.')) : '0,00' ?>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -55,7 +55,7 @@
                             Despesas
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            R$ <?= isset($despesasMes) ? esc(number_format($despesasMes, 2, ',', '.')) : '0,00' ?>
+                            R$ <?= isset($month_expenses) ? esc(number_format($month_expenses, 2, ',', '.')) : '0,00' ?>
                         </div>
                     </div>
                     <div class="col-auto">
@@ -75,7 +75,7 @@
                             Saldo
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            R$ <?= isset($saldoAtualMes) ? esc(number_format($saldoAtualMes, 2, ',', '.')) : '0,00' ?>
+                            R$ <?= isset($current_balance) ? esc(number_format($current_balance, 2, ',', '.')) : '0,00' ?>
                         </div>
                     </div>
                     <div class="col-auto">

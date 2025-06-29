@@ -84,19 +84,19 @@ class TransactionsController extends BaseController
 
         // getting data to display overall expenses and revenue of the current month
         $transactions = $model->getLatestTransactions($currentUser->id);
-        $despesasMes = $model->getCurrentCosts($currentUser->id);
-        $receitasMes = $model->getCurrentRevenue($currentUser->id);
+        $monthExpenses = $model->getCurrentCosts($currentUser->id);
+        $monthRevenues = $model->getCurrentRevenue($currentUser->id);
 
         // getting data to plot the line graph
         $latest_transactions = $model->getCurrentYearTransactions($currentUser->id);
         $currentYear = date('Y');
         $labels_for_line_graph = ["Jan/$currentYear", "Fev/$currentYear", "Mar/$currentYear", "Abr/$currentYear", "Mai/$currentYear", "Jun/$currentYear", "Jul/$currentYear", "Ago/$currentYear", "Set/$currentYear", "Out/$currentYear", "Nov/$currentYear", "Dez/$currentYear"];
-        $expenses_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        $revenues_data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $expensesData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $revenuesData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         foreach ($latest_transactions as $t) {
             $month = (int) $t->month;
-            $expenses_data[$month - 1] = $t->expenses;
-            $revenues_data[$month - 1] = $t->revenues;
+            $expensesData[$month - 1] = $t->expenses;
+            $revenuesData[$month - 1] = $t->revenues;
         }
 
         // getting data to plot the doughnut graph
@@ -110,14 +110,14 @@ class TransactionsController extends BaseController
         
         $data = [
             'transactions_list' => $transactions,
-            'despesasMes' => $despesasMes,
-            'receitasMes' => $receitasMes,
+            'month_expenses' => $monthExpenses,
+            'month_revenues' => $monthRevenues,
             'labels_for_pie_graph' => $labels_for_pie_graph,
             'data_for_pie_graph' => $total_amounts_by_category,
             'labels_for_line_graph' => $labels_for_line_graph,
-            'latest_expenses' => $expenses_data,
-            'latest_revenues' => $revenues_data,
-            'saldoAtualMes' => $receitasMes - $despesasMes,
+            'latest_expenses' => $expensesData,
+            'latest_revenues' => $revenuesData,
+            'current_balance' => $monthRevenues - $monthExpenses,
             'title' => 'Dashboard Financeiro - ' . ucfirst($time->toLocalizedString('MMMM yyyy')),
         ];
 
