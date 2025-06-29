@@ -125,7 +125,7 @@ if (!function_exists('isActive')) {
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Seu App Financeiro <?= date('Y') ?></span>
+                        <span>Copyright &copy; Controle Financeiro <?= date('Y') ?></span>
                     </div>
                 </div>
             </footer>
