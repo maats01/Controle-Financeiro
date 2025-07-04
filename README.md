@@ -27,7 +27,7 @@ php spark migrate --all
 ```
 Obs.: para as migrations funcionarem, é necessário ter um arquivo *.env* com as variáveis básicas para o framework se conectar com o banco de dados.  
 
-### 4. Executar os seeders
+### 4. Executar os seeders (opcional)
 ```bash
 php spark db:seed DatabaseSeeder
 ```
